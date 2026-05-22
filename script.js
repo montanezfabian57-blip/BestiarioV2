@@ -415,8 +415,11 @@ function renderSharedCharacterCard(character, options = {}) {
   const safeName = escapeHtml(character.name || 'Carta');
   const developmentProgress = currentUserId ? getCharacterDevelopmentProgress(currentUserId, character) : null;
   const isInDevelopmentMode = Boolean(developmentProgress);
+  const safeImage = escapeHtml(character.image || '');
   const safeDataValue = escapeHtml(dataValue || '');
-  const imageMarkup = '<div class="character-card-image placeholder-image">Sin imagen</div>';
+  const imageMarkup = character.image
+    ? `<img class="character-card-image" src="${safeImage}" alt="Imagen de ${safeName}">`
+    : '<div class="character-card-image placeholder-image">Sin imagen</div>';
 
   const tagName = staticCard ? 'div' : 'button';
   const interactiveAttributes = staticCard
@@ -1667,13 +1670,14 @@ function renderProfile(character) {
         <button class="cancel-character-btn" type="button" data-close-events>Volver al perfil</button>
       </div>
       ${events.length ? `<div class="events-grid">${events.map((entry) => `<article class="event-card">
-        <div class="event-thumb"><span>Sin imagen</span></div>
+        <div class="event-thumb">${entry.rivalCardImage ? `<img src="${escapeHtml(entry.rivalCardImage)}" alt="Rival ${escapeHtml(entry.rivalCardName || '')}">` : '<span>Sin imagen</span>'}</div>
         <span class="event-tag ${entry.isPositive ? 'positive' : 'negative'}">${escapeHtml(entry.tag || '')}</span>
         <p><strong>Rival:</strong> ${escapeHtml(entry.rivalName || 'Desconocido')}</p>
         <p><strong>Carta principal rival:</strong> ${escapeHtml(entry.rivalCardName || 'No disponible')}</p>
-        ${entry.locked ? `<p>${escapeHtml(entry.story || 'Sin historia registrada.')}</p>` : `<form class="event-form" data-event-id="${escapeHtml(entry.id)}">
+        ${entry.locked ? `<p>${escapeHtml(entry.story || 'Sin historia registrada.')}</p>${entry.image ? `<img class="event-story-image" src="${escapeHtml(entry.image)}" alt="Imagen del acontecimiento">` : ''}` : `<form class="event-form" data-event-id="${escapeHtml(entry.id)}">
           <label>Historia <textarea name="story" rows="4" required placeholder="Redacta la historia...">${escapeHtml(entry.story || '')}</textarea></label>
-          <p class="deck-lock-note">Las imágenes de acontecimientos están desactivadas temporalmente.</p>
+          <label>URL de imagen <input name="imageUrl" type="url" value="${escapeHtml(entry.image || '')}" placeholder="https://ejemplo.com/imagen.jpg"></label>
+          <label>o imagen del dispositivo <input name="imageFile" type="file" accept="image/*"></label>
           <button class="save-character-btn" type="submit">Guardar acontecimiento</button>
           <p class="deck-lock-note">Una vez guardado no se puede editar ni eliminar.</p>
         </form>`}
@@ -1714,11 +1718,19 @@ function renderProfile(character) {
       if (!eventId || !currentEvent || currentEvent.locked) return;
       const formData = new FormData(eventForm);
       const story = String(formData.get('story') || '').trim();
+      const imageUrl = String(formData.get('imageUrl') || '').trim();
       if (!story) return;
-      const saveEvent = async () => {
-        await getCharacterRef(character.id).child(`events/${eventId}`).update({ story, image: '', locked: true, savedAt: getTimestamp() });
+      const saveEvent = async (imageValue) => {
+        await getCharacterRef(character.id).child(`events/${eventId}`).update({ story, image: imageValue || '', locked: true, savedAt: getTimestamp() });
       };
-      await saveEvent();
+      const file = formData.get('imageFile');
+      if (file && file.size) {
+        const reader = new FileReader();
+        reader.addEventListener('load', async () => saveEvent(reader.result));
+        reader.readAsDataURL(file);
+      } else {
+        await saveEvent(imageUrl);
+      }
     });
   });
   document.querySelector('.profile-form .delete-character-btn').addEventListener('click', () => {
@@ -1740,6 +1752,7 @@ function renderProfile(character) {
   document.querySelector('.profile-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    const profileImage = document.querySelector('#profile-image-current').value.trim();
     const characterToUpdate = characters.find((entry) => entry.id === activeProfileId);
     if (!characterToUpdate) {
       return;
@@ -1804,7 +1817,7 @@ function renderProfile(character) {
         intelligence: String(next.intelligence),
         speed: String(next.speed),
         story: formData.get('story').trim(),
-        image: '',
+        image: profileImage || formData.get('imageUrl').trim(),
         clan: formData.get('clan'),
       });
       await usersRef.child(currentUserId).child(`experiencePoints/byCharacter/${characterToUpdate.id}`).set({ positive: 0, negative: 0, total: 0, updatedAt: getTimestamp() });
@@ -2035,7 +2048,7 @@ function createCharacterForm() {
       intelligence: formData.get('intelligence'),
       speed: formData.get('speed'),
       story: formData.get('story').trim(),
-      image: '',
+      image: filePreview || formData.get('imageUrl').trim(),
     };
 
     try {
