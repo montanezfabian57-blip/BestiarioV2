@@ -1013,19 +1013,24 @@ body::before {
   display: grid;
   gap: 0.95rem;
 }
-
+.battle-slots,
 .battle-hand {
-  grid-template-columns: repeat(5, minmax(20px, 40px));
-  justify-content: start;
+  height: 100%;
+  display: grid;
+  /* El minmax(80px, 130px) controla qué tan grandes serán las cartas. Ajusta esos números si las quieres más grandes o chicas */
+  grid-template-columns: repeat(5, minmax(80px, 130px)); 
+  justify-content: center; /* Mantiene las cartas agrupadas en el centro */
+  align-items: center;     /* Las centra verticalmente en su fila */
+  gap: 0.8rem;
 }
 
-.battle-hand-card {
+/* Fuerza el tamaño y la proporción de Naipe vertical para ambas zonas */
+.battle-slot,
+.battle-hand .character-card {
   width: 100%;
-}
-
-
-  grid-template-columns: repeat(5, minmax(40px, 55px));
-  justify-content: start;
+  height: auto;
+  aspect-ratio: 2 / 3; /* Proporción clásica de carta */
+  margin: 0 auto;
 }
 
 .battle-slot {
@@ -1581,9 +1586,12 @@ body::before {
   height: auto; 
   margin: 0 auto;
 }
-.battle-main-row .character-card-image {
+.battle-main-grid .character-card-image {
+  width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain; /* Esto hace que la imagen no se recorte */
+  object-position: center; /* Centra la imagen */
+  background-color: #0c0a08; /* Un fondo oscuro por si la imagen es más delgada que la carta */
 }
 .battle-side-bottom {
   display: grid;
