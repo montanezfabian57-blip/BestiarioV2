@@ -224,6 +224,23 @@ body::before {
   }
 }
 
+
+.battle-board > div {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.4rem;
+}
+
+.battle-board h4 {
+  margin: 0;
+}
+
+.battle-board .battle-slots,
+.battle-board .battle-hand {
+  min-height: 0;
+  align-content: start;
+}
 @media (max-width: 900px) {
   .deck-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -978,8 +995,8 @@ body::before {
 }
 
 .battle-hand {
-  grid-template-columns: repeat(3, minmax(180px, 220px));
-  justify-content: center;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  justify-content: stretch;
 }
 
 .battle-hand-card {
@@ -987,7 +1004,7 @@ body::before {
 }
 
 .battle-slots {
-  grid-template-columns: repeat(5, minmax(140px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .battle-slot {
@@ -1008,12 +1025,18 @@ body::before {
   max-height: 100vh;
   border-radius: 0;
   padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .battle-board {
   display: grid;
-  gap: 1rem;
-  padding: 1rem;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.5rem, 1vh, 0.9rem);
+  padding: clamp(0.6rem, 1vh, 1rem);
+  min-height: 0;
+  height: 100%;
   border-radius: 18px;
   border: 1px solid rgba(167, 177, 193, 0.45);
   background:
@@ -1033,7 +1056,7 @@ body::before {
 }
 
 .battle-slot {
-  min-height: 260px;
+  min-height: clamp(150px, 22vh, 220px);
   padding: 0;
   border: 1px solid rgba(181, 192, 209, 0.5);
   background:
@@ -1052,13 +1075,30 @@ body::before {
     0 6px 14px rgba(0, 0, 0, 0.35);
 }
 
-@media (max-width: 900px) {
-  .battle-hand {
-    grid-template-columns: repeat(2, minmax(160px, 1fr));
+@media (max-width: 1100px) {
+  .battle-hand,
+  .battle-slots {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.45rem;
   }
 
+  .battle-slot {
+    min-height: clamp(125px, 18vh, 185px);
+  }
+}
+
+@media (max-width: 760px) {
+  .battle-arena-card {
+    padding: 0.7rem;
+  }
+
+  .battle-hand,
   .battle-slots {
-    grid-template-columns: repeat(3, minmax(120px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .battle-slot {
+    min-height: 135px;
   }
 }
 
@@ -1074,7 +1114,7 @@ body::before {
 }
 
 .battle-mini-name { padding: 0.4rem; font-weight: 700; text-align: center; background: rgba(0,0,0,.4);} 
-.battle-mini-image { width: 100%; height: 150px; object-fit: cover; }
+.battle-mini-image { width: 100%; height: clamp(78px, 10vh, 120px); object-fit: cover; }
 .battle-mini-meta, .battle-mini-stats { font-size: .78rem; padding: .25rem .35rem; background: rgba(0,0,0,.35);}
 .battle-mini-meta .character-type-clan-tag { font-size: .72rem; }
 .battle-facedown-plate {
