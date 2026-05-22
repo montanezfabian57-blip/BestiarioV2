@@ -1047,7 +1047,7 @@ body::before {
   border-radius: 0;
   padding: 0.25rem 0.8rem 0.7rem;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 230px;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.9rem;
   overflow: hidden;
 }
@@ -1055,7 +1055,7 @@ body::before {
 .battle-board {
   grid-column: 1;
   display: grid;
-  grid-template-rows: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto repeat(3, minmax(0, 1fr));
   gap: clamp(0.45rem, 0.9vh, 0.8rem);
   padding: clamp(0.3rem, 0.6vh, 0.55rem);
   min-height: 0;
@@ -1079,8 +1079,6 @@ body::before {
 }
 
 .battle-arena-header {
-  grid-column: 2;
-  align-self: start;
   display: grid;
   gap: 0.7rem;
   align-content: start;
@@ -1100,7 +1098,7 @@ body::before {
 
 .battle-close-btn {
   margin-left: 0;
-  width: 100%;
+  width: min(320px, 100%);
 }
 
 .battle-vertical-card .character-card-layout {
