@@ -65,6 +65,9 @@ const battleActionCancelButton = document.querySelector('#battle-action-cancel')
 const battleSurrenderVictoryModal = document.querySelector('#battle-surrender-victory-modal');
 const battleSurrenderVictoryText = document.querySelector('#battle-surrender-victory-text');
 const battleSurrenderVictoryCloseButton = document.querySelector('#battle-surrender-victory-close-btn');
+const battleMessageModal = document.querySelector('#battle-message-modal');
+const battleMessageText = document.querySelector('#battle-message-text');
+const battleMessageCloseButton = document.querySelector('#battle-message-close-btn');
 const battleHistoryList = document.querySelector('#battle-history-list');
 const historyTypesList = document.querySelector('#history-types-list');
 const historyClansList = document.querySelector('#history-clans-list');
@@ -791,6 +794,16 @@ function hideSurrenderVictoryModal() {
   battleSurrenderVictoryModal?.classList.add('hidden');
 }
 
+function showBattleMessage(message) {
+  if (!battleMessageModal || !battleMessageText) return;
+  battleMessageText.textContent = message;
+  battleMessageModal.classList.remove('hidden');
+}
+
+function hideBattleMessage() {
+  battleMessageModal?.classList.add('hidden');
+}
+
 async function respondToChallenge(status) {
   if (!currentUserId || !activeChallenge || isRespondingToChallenge) return;
   isRespondingToChallenge = true;
@@ -1106,7 +1119,7 @@ async function resolveAttack(session, attackerSlotId, targetSlotId, attackerAttr
       pendingDefense: null,
       updatedAt: getTimestamp(),
     });
-    window.alert(`Ataque (${attackerAttribute}) vs defensa (${defenderAttribute}): ${attackerCard.name} (${attackerValue}) vs ${targetCard.name} (${targetValue}). Ninguna carta desaparece y el turno pasa al rival.${statPenaltyMessage}`);
+    showBattleMessage(`Ataque (${attackerAttribute}) vs defensa (${defenderAttribute}): ${attackerCard.name} (${attackerValue}) vs ${targetCard.name} (${targetValue}). Ninguna carta desaparece y el turno pasa al rival.${statPenaltyMessage}`);
     return;
   }
 
@@ -1129,7 +1142,7 @@ async function resolveAttack(session, attackerSlotId, targetSlotId, attackerAttr
   });
 
   const exhaustionNote = attackerDestroyedByExhaustion ? ` ${attackerCard.name} también fue destruida al quedarse sin ${attackerAttribute}.` : '';
-  window.alert(`Ataque (${attackerAttribute}) vs defensa (${defenderAttribute}): ${attackerCard.name} (${attackerValue}) vs ${targetCard.name} (${targetValue}). La carta derrotada desapareció del mazo y de la mano.${statPenaltyMessage}${exhaustionNote} El turno pasa al rival.`);
+  showBattleMessage(`Ataque (${attackerAttribute}) vs defensa (${defenderAttribute}): ${attackerCard.name} (${attackerValue}) vs ${targetCard.name} (${targetValue}). La carta derrotada desapareció del mazo y de la mano.${statPenaltyMessage}${exhaustionNote} El turno pasa al rival.`);
 }
 
 
@@ -2398,7 +2411,7 @@ document.addEventListener('click', (event) => {
 
     const hasDeckReady = savedDeck.characterIds.length === 20 && savedDeck.mainIds.length === 5;
     if (!hasDeckReady) {
-      window.alert('Debes tener un mazo de 20 personajes y elegir 5 principales antes de retar.');
+      showBattleMessage('Debes tener un mazo de 20 personajes y elegir 5 principales antes de retar.');
       return;
     }
 
@@ -2462,7 +2475,7 @@ document.addEventListener('click', (event) => {
     if (!attackerCard) return;
     openAttributePicker('attack', attackerCard, (selectedAttribute) => {
       pendingAttack = { attackerSlotId: clickedSlot.id, attribute: selectedAttribute };
-      window.alert('Atributo elegido. Ahora selecciona una carta del campo rival para atacarla.');
+      showBattleMessage('Atributo elegido. Ahora selecciona una carta del campo rival para atacarla.');
     });
     return;
   }
@@ -2488,7 +2501,7 @@ document.addEventListener('click', (event) => {
     updatedAt: getTimestamp(),
   });
   pendingAttack = null;
-  window.alert('Carta boca abajo elegida. El defensor debe escoger su atributo para resolver el combate.');
+  showBattleMessage('Carta boca abajo elegida. El defensor debe escoger su atributo para resolver el combate.');
 });
 
 battleAttackCancelButton?.addEventListener('click', hideAttributePicker);
@@ -2510,6 +2523,7 @@ battleArenaCloseButton.addEventListener('click', () => {
 });
 
 battleSurrenderVictoryCloseButton?.addEventListener('click', hideSurrenderVictoryModal);
+battleMessageCloseButton?.addEventListener('click', hideBattleMessage);
 
 battleSessionsRef.on('value', (snapshot) => {
   if (!currentUserId) return;
