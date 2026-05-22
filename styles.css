@@ -1510,7 +1510,7 @@ body::before {
 
 .battle-main-grid {
   display: grid;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: 1fr 1fr 1fr;
   min-height: 0;
 }
 
@@ -1526,28 +1526,78 @@ body::before {
   border-bottom: 0;
 }
 
+.battle-slots {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  align-content: stretch;
+  gap: 0.6rem;
+}
+
+.battle-hand {
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: stretch;
+  gap: 0.6rem;
+}
+
+.battle-slot,
+.battle-hand .character-card,
+.battle-hand > p {
+  min-height: 0;
+}
+
 .battle-side-column {
   min-height: 0;
   display: grid;
-  grid-template-rows: 1fr auto;
-  gap: 0.6rem;
+  grid-template-rows: auto 1fr auto;
+  gap: 0.7rem;
   padding: 0.8rem;
   background: linear-gradient(160deg, rgba(53, 44, 33, 0.95), rgba(31, 25, 18, 0.95));
 }
 
+.battle-side-top,
+.battle-side-middle,
+.battle-side-bottom {
+  min-height: 0;
+}
+
+.battle-side-top {
+  display: grid;
+  align-items: center;
+}
+
+.battle-side-middle {
+  border: 1px dashed rgba(196, 152, 70, 0.25);
+  border-radius: 10px;
+}
+
+.battle-side-bottom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  align-items: end;
+}
+
 .battle-turn-label {
   margin: 0;
-  display: grid;
-  place-items: center;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(196, 152, 70, 0.45);
+  background: rgba(0, 0, 0, 0.2);
   text-align: center;
 }
 
 .battle-close-btn {
   width: 100%;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.55rem;
 }
 
-.battle-hand,
-.battle-slots {
-  height: 100%;
-  align-content: start;
+.lane-padding {
+  border: 1px dashed rgba(196, 152, 70, 0.35);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
 }
