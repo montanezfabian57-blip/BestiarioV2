@@ -207,6 +207,8 @@ body::before {
 
 .experience-outcome-card-preview {
   margin: 0.75rem 0 0.4rem;
+  width: min(100%, 340px);
+  margin-inline: auto;
 }
 
 @keyframes developmentGlow {
@@ -937,6 +939,24 @@ body::before {
   background: linear-gradient(160deg, rgba(53, 44, 33, 0.95), rgba(31, 25, 18, 0.95));
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
   padding: 1.2rem;
+}
+
+#battle-experience-outcome-modal .challenge-modal-card {
+  max-height: min(92vh, 820px);
+  overflow: auto;
+}
+
+#battle-experience-outcome-card {
+  max-width: 100%;
+}
+
+#battle-experience-outcome-card .character-card-layout {
+  min-height: clamp(180px, 46vh, 420px);
+}
+
+#battle-experience-outcome-card .character-card-right,
+#battle-experience-outcome-card .placeholder-image {
+  min-height: clamp(120px, 34vh, 330px);
 }
 
 .challenge-actions {
