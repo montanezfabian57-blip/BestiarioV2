@@ -1331,9 +1331,13 @@ async function executeBotTurn(session) {
       actionPool.push('attack');
     }
 
-    const selectedAction = actionPool.length
+    let selectedAction = actionPool.length
       ? actionPool[Math.floor(Math.random() * actionPool.length)]
       : null;
+
+    if (!botState.hand.length && hasAttackOption) {
+      selectedAction = 'attack';
+    }
 
     if (selectedAction === 'place-faceup' || selectedAction === 'place-facedown') {
       const cardId = botState.hand[0];
