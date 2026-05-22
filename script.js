@@ -1050,6 +1050,15 @@ function getPlayerState(session, uid) {
   return { ...state, hand, deck };
 }
 
+function refillHandFromDeck(hand = [], deck = [], handSize = 3) {
+  const nextHand = [...hand];
+  const nextDeck = [...deck];
+  while (nextHand.length < handSize && nextDeck.length) {
+    nextHand.push(nextDeck.shift());
+  }
+  return { hand: nextHand, deck: nextDeck };
+}
+
 function getStatValue(character, attribute) {
   return Number.parseInt(character?.[attribute] ?? '0', 10) || 0;
 }
@@ -1152,10 +1161,13 @@ async function resolveAttack(session, attackerSlotId, targetSlotId, attackerAttr
 
   Object.keys(updatedPlayerStates).forEach((uid) => {
     const state = updatedPlayerStates[uid] || { hand: [], deck: [] };
+    const filteredHand = (state.hand || []).filter((id) => !destroyedCardIds.has(id));
+    const filteredDeck = (state.deck || []).filter((id) => !destroyedCardIds.has(id));
+    const replenishedState = refillHandFromDeck(filteredHand, filteredDeck);
     updatedPlayerStates[uid] = {
       ...state,
-      hand: (state.hand || []).filter((id) => !destroyedCardIds.has(id)),
-      deck: (state.deck || []).filter((id) => !destroyedCardIds.has(id)),
+      hand: replenishedState.hand,
+      deck: replenishedState.deck,
     };
   });
 
@@ -1368,9 +1380,10 @@ async function executeBotTurn(session) {
 
     if (selectedAction === 'place-faceup' || selectedAction === 'place-facedown') {
       const cardId = botState.hand[0];
-      const updatedHand = botState.hand.slice(1);
-      const updatedDeck = [...botState.deck];
-      if (updatedDeck.length) updatedHand.push(updatedDeck.shift());
+      const updatedState = refillHandFromDeck(
+        botState.hand.slice(1),
+        [...botState.deck],
+      );
       const faceDown = selectedAction === 'place-facedown';
       const fieldSlots = (session.fieldSlots || []).map((slot) => (
         slot.id === emptyBotSlot.id ? { ...slot, cardId, faceDown } : slot
@@ -1379,8 +1392,8 @@ async function executeBotTurn(session) {
       await battleSessionsRef.child(session.id).update({
         fieldSlots,
         currentTurnUid: nextTurnUid,
-        [`playerStates/${BOT_UID}/hand`]: updatedHand,
-        [`playerStates/${BOT_UID}/deck`]: updatedDeck,
+        [`playerStates/${BOT_UID}/hand`]: updatedState.hand,
+        [`playerStates/${BOT_UID}/deck`]: updatedState.deck,
         updatedAt: getTimestamp(),
       });
       return;
@@ -2485,15 +2498,16 @@ document.addEventListener('click', (event) => {
     if (!myState.hand.includes(selectedHandCardId)) return;
     const faceDown = pendingPlacementMode === 'facedown';
     const fieldSlots = (session.fieldSlots || []).map((slot) => (slot.id === slotId ? { ...slot, cardId: selectedHandCardId, faceDown } : slot));
-    const updatedHand = myState.hand.filter((id) => id !== selectedHandCardId);
-    const updatedDeck = [...myState.deck];
-    if (updatedDeck.length) updatedHand.push(updatedDeck.shift());
+    const updatedState = refillHandFromDeck(
+      myState.hand.filter((id) => id !== selectedHandCardId),
+      [...myState.deck],
+    );
     const opponentUid = session.players.find((uid) => uid !== currentUserId);
     battleSessionsRef.child(session.id).update({
       fieldSlots,
       currentTurnUid: opponentUid,
-      [`playerStates/${currentUserId}/hand`]: updatedHand,
-      [`playerStates/${currentUserId}/deck`]: updatedDeck,
+      [`playerStates/${currentUserId}/hand`]: updatedState.hand,
+      [`playerStates/${currentUserId}/deck`]: updatedState.deck,
       updatedAt: getTimestamp(),
     });
     selectedHandCardId = null;
