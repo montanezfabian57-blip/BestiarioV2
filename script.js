@@ -1319,12 +1319,9 @@ async function createBattleSessionForChallenge(challengeData) {
   return id;
 }
 
-function playerHasNoRemainingCards(session, uid) {
+function playerHasNoHandCards(session, uid) {
   const state = getPlayerState(session, uid);
-  const hasHandCards = (state.hand || []).length > 0;
-  const hasDeckCards = (state.deck || []).length > 0;
-  const hasFieldCards = (session.fieldSlots || []).some((slot) => slot.ownerUid === uid && slot.cardId);
-  return !hasHandCards && !hasDeckCards && !hasFieldCards;
+  return (state.hand || []).length === 0;
 }
 
 async function finishBattleIfPlayerOutOfCards(session) {
@@ -1332,8 +1329,8 @@ async function finishBattleIfPlayerOutOfCards(session) {
   const players = getBattlePlayers(session);
   if (players.length !== 2) return false;
   const [playerAUid, playerBUid] = players;
-  const playerAOut = playerHasNoRemainingCards(session, playerAUid);
-  const playerBOut = playerHasNoRemainingCards(session, playerBUid);
+  const playerAOut = playerHasNoHandCards(session, playerAUid);
+  const playerBOut = playerHasNoHandCards(session, playerBUid);
   if (!playerAOut && !playerBOut) return false;
 
   const loserUid = playerAOut ? playerAUid : playerBUid;
