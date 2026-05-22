@@ -1083,11 +1083,9 @@ body::before {
   gap: 0.7rem;
   align-content: start;
   padding: 0.8rem;
-  padding-bottom: 2.9rem;
   border-radius: 14px;
   border: 1px solid rgba(196, 152, 70, 0.45);
   background: linear-gradient(160deg, rgba(53, 44, 33, 0.9), rgba(31, 25, 18, 0.9));
-  position: relative;
 }
 
 .battle-arena-header h3 {
@@ -1095,18 +1093,30 @@ body::before {
 }
 
 .battle-header-dock {
-  position: absolute;
-  left: 0.8rem;
-  bottom: -1px;
-  width: 108px;
-  height: 108px;
-  padding: 0.35rem;
+  width: 140px;
+  min-height: 112px;
+  padding: 0.45rem;
   border: 1px solid rgba(196, 152, 70, 0.7);
   border-radius: 8px;
   background: linear-gradient(160deg, rgba(53, 44, 33, 0.98), rgba(31, 25, 18, 0.98));
   display: grid;
   grid-template-rows: 1fr auto;
   gap: 0.3rem;
+  align-self: end;
+}
+
+.battle-bottom-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 0.8rem;
+}
+
+.battle-hand-wrap {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.4rem;
 }
 
 .battle-turn-label {
@@ -1191,6 +1201,15 @@ body::before {
   .battle-hand,
   .battle-slots {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .battle-bottom-row {
+    grid-template-columns: 1fr;
+  }
+
+  .battle-header-dock {
+    width: 100%;
+    min-height: 92px;
   }
 
   .battle-slot {
