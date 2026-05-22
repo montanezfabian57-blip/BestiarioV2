@@ -68,6 +68,10 @@ const battleSurrenderVictoryCloseButton = document.querySelector('#battle-surren
 const battleMessageModal = document.querySelector('#battle-message-modal');
 const battleMessageText = document.querySelector('#battle-message-text');
 const battleMessageCloseButton = document.querySelector('#battle-message-close-btn');
+const battleExperienceOutcomeModal = document.querySelector('#battle-experience-outcome-modal');
+const battleExperienceOutcomeText = document.querySelector('#battle-experience-outcome-text');
+const battleExperienceOutcomeCard = document.querySelector('#battle-experience-outcome-card');
+const battleExperienceOutcomeCloseButton = document.querySelector('#battle-experience-outcome-close-btn');
 const battleHistoryList = document.querySelector('#battle-history-list');
 const historyTypesList = document.querySelector('#history-types-list');
 const historyClansList = document.querySelector('#history-clans-list');
@@ -719,6 +723,14 @@ async function registerBattleOutcome(session) {
       didWin: false,
     });
   }
+  if (currentUserId === session.winnerUid && winnerExperienceResult?.selectedCardId) {
+    const character = characters.find((entry) => entry.id === winnerExperienceResult.selectedCardId);
+    showExperienceOutcomeModal({ character, isPositive: true });
+  }
+  if (currentUserId === session.loserUid && loserExperienceResult?.selectedCardId) {
+    const character = characters.find((entry) => entry.id === loserExperienceResult.selectedCardId);
+    showExperienceOutcomeModal({ character, isPositive: false });
+  }
 }
 
 async function ensureBattleHistoryPair(userAUid, userBUid) {
@@ -802,6 +814,21 @@ function showBattleMessage(message) {
 
 function hideBattleMessage() {
   battleMessageModal?.classList.add('hidden');
+}
+
+function showExperienceOutcomeModal({ character, isPositive }) {
+  if (!battleExperienceOutcomeModal || !battleExperienceOutcomeText || !battleExperienceOutcomeCard || !character) return;
+  const pointsLabel = isPositive ? 'positivos (+1)' : 'negativos (-1)';
+  battleExperienceOutcomeText.textContent = `${character.name} ganó puntos de experiencia ${pointsLabel}.`;
+  battleExperienceOutcomeCard.innerHTML = renderSharedCharacterCard(character, {
+    staticCard: true,
+    extraClasses: 'character-size-compact experience-outcome-card-preview',
+  });
+  battleExperienceOutcomeModal.classList.remove('hidden');
+}
+
+function hideExperienceOutcomeModal() {
+  battleExperienceOutcomeModal?.classList.add('hidden');
 }
 
 async function respondToChallenge(status) {
@@ -2524,6 +2551,7 @@ battleArenaCloseButton.addEventListener('click', () => {
 
 battleSurrenderVictoryCloseButton?.addEventListener('click', hideSurrenderVictoryModal);
 battleMessageCloseButton?.addEventListener('click', hideBattleMessage);
+battleExperienceOutcomeCloseButton?.addEventListener('click', hideExperienceOutcomeModal);
 
 battleSessionsRef.on('value', (snapshot) => {
   if (!currentUserId) return;
