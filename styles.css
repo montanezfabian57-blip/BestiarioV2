@@ -1015,8 +1015,8 @@ body::before {
 }
 
 .battle-hand {
-  grid-template-columns: repeat(5, minmax(92px, 128px));
-  justify-content: space-between;
+  grid-template-columns: repeat(5, minmax(46px, 64px));
+  justify-content: start;
 }
 
 .battle-hand-card {
@@ -1024,8 +1024,8 @@ body::before {
 }
 
 .battle-slots {
-  grid-template-columns: repeat(5, minmax(92px, 128px));
-  justify-content: space-between;
+  grid-template-columns: repeat(5, minmax(46px, 64px));
+  justify-content: start;
 }
 
 .battle-slot {
@@ -1156,7 +1156,7 @@ body::before {
 }
 
 .battle-slot {
-  min-height: clamp(102px, 14.5vh, 150px);
+  min-height: clamp(51px, 7.25vh, 75px);
   aspect-ratio: 2 / 3;
   padding: 0;
   border: 1px solid rgba(181, 192, 209, 0.5);
@@ -1179,12 +1179,12 @@ body::before {
 @media (max-width: 1100px) {
   .battle-hand,
   .battle-slots {
-    grid-template-columns: repeat(5, minmax(82px, 1fr));
+    grid-template-columns: repeat(5, minmax(46px, 64px));
     gap: 0.45rem;
   }
 
   .battle-slot {
-    min-height: clamp(145px, 22vh, 205px);
+    min-height: clamp(72px, 11vh, 102px);
   }
 }
 
@@ -1215,7 +1215,7 @@ body::before {
   }
 
   .battle-slot {
-    min-height: 135px;
+    min-height: 68px;
   }
 }
 
@@ -1231,9 +1231,9 @@ body::before {
 }
 
 .battle-mini-name { padding: 0.4rem; font-weight: 700; text-align: center; background: rgba(0,0,0,.4);} 
-.battle-mini-image { width: 100%; height: clamp(74px, 10vh, 120px); object-fit: contain; background: rgba(0, 0, 0, 0.32); }
-.battle-mini-meta, .battle-mini-stats { font-size: .72rem; padding: .2rem .3rem; background: rgba(0,0,0,.35);}
-.battle-mini-meta .character-type-clan-tag { font-size: .72rem; }
+.battle-mini-image { width: 100%; height: clamp(37px, 5vh, 60px); object-fit: contain; background: rgba(0, 0, 0, 0.32); }
+.battle-mini-meta, .battle-mini-stats { font-size: .5rem; padding: .12rem .18rem; background: rgba(0,0,0,.35);}
+.battle-mini-meta .character-type-clan-tag { font-size: .5rem; }
 .battle-facedown-plate {
   display: grid;
   place-items: center;
