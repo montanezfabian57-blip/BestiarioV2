@@ -1055,9 +1055,9 @@ body::before {
 .battle-board {
   grid-column: 1;
   display: grid;
-  grid-template-rows: auto repeat(3, minmax(0, 1fr));
-  gap: clamp(0.45rem, 0.9vh, 0.8rem);
-  padding: clamp(0.3rem, 0.6vh, 0.55rem);
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.3rem, 0.7vh, 0.55rem);
+  padding: clamp(0.2rem, 0.45vh, 0.35rem);
   min-height: 0;
   height: 100%;
   border-radius: 18px;
@@ -1093,9 +1093,9 @@ body::before {
 }
 
 .battle-header-dock {
-  width: 140px;
-  min-height: 112px;
-  padding: 0.45rem;
+  width: 118px;
+  min-height: 92px;
+  padding: 0.35rem;
   border: 1px solid rgba(196, 152, 70, 0.7);
   border-radius: 8px;
   background: linear-gradient(160deg, rgba(53, 44, 33, 0.98), rgba(31, 25, 18, 0.98));
@@ -1109,7 +1109,7 @@ body::before {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
-  gap: 0.8rem;
+  gap: 0.55rem;
 }
 
 .battle-hand-wrap {
@@ -1121,7 +1121,7 @@ body::before {
 
 .battle-turn-label {
   margin: 0;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   line-height: 1.1;
   text-align: center;
   display: grid;
@@ -1130,31 +1130,33 @@ body::before {
 
 .battle-close-btn {
   width: 100%;
-  min-height: 30px;
-  font-size: 0.8rem;
+  min-height: 26px;
+  font-size: 0.72rem;
   padding: 0.15rem 0.2rem;
 }
 
 .battle-vertical-card .character-card-layout {
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr auto;
-  min-height: clamp(190px, 28vh, 300px);
+  min-height: clamp(155px, 23vh, 235px);
 }
 
 .battle-vertical-card .character-card-right,
 .battle-vertical-card .placeholder-image {
-  min-height: clamp(100px, 14vh, 170px);
+  min-height: clamp(88px, 12vh, 132px);
 }
 
 .battle-vertical-card .character-card-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   border-left: 0;
+  background: rgba(0, 0, 0, 0.28);
 }
 
 .battle-slot {
-  min-height: clamp(118px, 17vh, 185px);
+  min-height: clamp(102px, 14.5vh, 150px);
   aspect-ratio: 2 / 3;
   padding: 0;
   border: 1px solid rgba(181, 192, 209, 0.5);
