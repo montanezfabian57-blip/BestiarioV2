@@ -54,6 +54,7 @@ const acceptChallengeButton = document.querySelector('#accept-challenge-btn');
 const rejectChallengeButton = document.querySelector('#reject-challenge-btn');
 const battleArenaModal = document.querySelector('#battle-arena-modal');
 const battleArenaCloseButton = document.querySelector('#battle-arena-close-btn');
+const battleArenaSurrenderButton = document.querySelector('#battle-arena-surrender-btn');
 const battleTurnLabel = document.querySelector('#battle-turn-label');
 const battleHand = document.querySelector('#battle-hand');
 const battleOpponentSlots = document.querySelector('#battle-opponent-slots');
@@ -1197,6 +1198,11 @@ function getBattleCardWithEffectiveStats(session, cardId) {
   };
 }
 
+function getActiveBattleOpponentUid() {
+  if (!activeBattleSession || !currentUserId) return '';
+  return (activeBattleSession.players || []).find((uid) => uid !== currentUserId) || '';
+}
+
 function renderBattleArena() {
   if (!activeBattleSession || !currentUserId) return;
   const session = activeBattleSession;
@@ -1204,10 +1210,15 @@ function renderBattleArena() {
   const myTurn = currentTurnUid === currentUserId;
   const players = getBattlePlayers(session);
   const opponentUid = players.find((uid) => uid !== currentUserId);
+
+  if (battleArenaSurrenderButton) {
+    battleArenaSurrenderButton.disabled = !opponentUid || surrenderInFlightUserId === opponentUid;
+    battleArenaSurrenderButton.textContent = surrenderInFlightUserId === opponentUid ? 'Procesando...' : 'Rendirse';
+  }
   const myState = getPlayerState(session, currentUserId);
 
   battleTurnLabel.textContent = myTurn ? 'Es tu turno.' : 'Turno del contrincante.';
-  battleHand.innerHTML = myState.hand.map((cardId) => {
+  const handCardsMarkup = myState.hand.slice(0, 3).map((cardId) => {
     const card = getBattleCardWithEffectiveStats(session, cardId);
     const selectedClass = selectedHandCardId === cardId ? 'is-picked' : '';
     if (!card) return '';
@@ -1217,13 +1228,14 @@ function renderBattleArena() {
       extraClasses: `deck-card battle-hand-card character-size-compact battle-vertical-card ${selectedClass}`,
       ariaLabel: `Carta en mano ${card.name}`,
     });
-  }).join('') || '<p>No tienes cartas en mano.</p>';
+  }).join('');
+  battleHand.innerHTML = `<span class="battle-slot-empty lane-padding" aria-hidden="true"></span>${handCardsMarkup || '<p>No tienes cartas en mano.</p>'}`;
 
   const renderSlots = (ownerUid, slotsContainer, isPlayer) => {
     const slots = (session.fieldSlots || [])
       .filter((slot) => slot.ownerUid === ownerUid)
       .slice(0, 5);
-    slotsContainer.innerHTML = slots.map((slot) => {
+    const slotMarkup = slots.map((slot) => {
       const card = slot.cardId ? getBattleCardWithEffectiveStats(session, slot.cardId) : null;
       const hiddenForOpponent = slot.faceDown && !isPlayer;
       const obscuredForOwner = slot.faceDown && isPlayer;
@@ -1234,6 +1246,8 @@ function renderBattleArena() {
         : '<span class="battle-slot-empty">Vacío</span>';;
       return `<button class="battle-slot ${slot.cardId ? 'occupied' : ''} ${slot.faceDown ? 'facedown' : ''}" data-battle-slot-id="${slot.id}" ${(!canPlace && !canInspect) ? 'disabled' : ''}>${content}</button>`;
     }).join('');
+    slotsContainer.innerHTML = `<span class="battle-slot-empty lane-padding" aria-hidden="true"></span>${slotMarkup}`;
+
   };
 
   renderSlots(opponentUid, battleOpponentSlots, false);
@@ -2562,6 +2576,14 @@ rejectChallengeButton.addEventListener('click', () => {
 battleArenaCloseButton.addEventListener('click', () => {
   battleArenaDismissed = true;
   battleArenaModal.classList.add('hidden');
+});
+
+battleArenaSurrenderButton?.addEventListener('click', () => {
+  const opponentUid = getActiveBattleOpponentUid();
+  if (!opponentUid) return;
+  surrenderBattleAgainst(opponentUid).catch((error) => {
+    console.error('No se pudo rendir la batalla:', error);
+  });
 });
 
 battleSurrenderVictoryCloseButton?.addEventListener('click', hideSurrenderVictoryModal);
