@@ -1025,12 +1025,14 @@ body::before {
   max-height: 100vh;
   border-radius: 0;
   padding: 1rem 1.2rem;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  gap: 0.9rem;
   overflow: hidden;
 }
 
 .battle-board {
+  grid-column: 1;
   display: grid;
   grid-template-rows: repeat(3, minmax(0, 1fr));
   gap: clamp(0.5rem, 1vh, 0.9rem);
@@ -1053,6 +1055,49 @@ body::before {
     inset 0 16px 28px rgba(255, 255, 255, 0.08),
     inset 0 -24px 30px rgba(0, 0, 0, 0.45),
     0 14px 32px rgba(0, 0, 0, 0.42);
+}
+
+.battle-arena-header {
+  grid-column: 2;
+  align-self: start;
+  display: grid;
+  gap: 0.7rem;
+  align-content: start;
+  padding: 0.8rem;
+  border-radius: 14px;
+  border: 1px solid rgba(196, 152, 70, 0.45);
+  background: linear-gradient(160deg, rgba(53, 44, 33, 0.9), rgba(31, 25, 18, 0.9));
+}
+
+.battle-arena-header h3 {
+  margin: 0;
+}
+
+.battle-turn-label {
+  margin: 0;
+}
+
+.battle-close-btn {
+  margin-left: 0;
+  width: 100%;
+}
+
+.battle-vertical-card .character-card-layout {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  min-height: clamp(190px, 28vh, 300px);
+}
+
+.battle-vertical-card .character-card-right,
+.battle-vertical-card .placeholder-image {
+  min-height: clamp(100px, 14vh, 170px);
+}
+
+.battle-vertical-card .character-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-left: 0;
 }
 
 .battle-slot {
@@ -1090,6 +1135,13 @@ body::before {
 @media (max-width: 760px) {
   .battle-arena-card {
     padding: 0.7rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .battle-arena-header,
+  .battle-board {
+    grid-column: 1;
   }
 
   .battle-hand,

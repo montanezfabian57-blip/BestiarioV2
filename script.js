@@ -1202,7 +1202,7 @@ function renderBattleArena() {
     return renderSharedCharacterCard(card, {
       dataAttribute: 'data-battle-hand-id',
       dataValue: cardId,
-      extraClasses: `deck-card battle-hand-card character-size-compact ${selectedClass}`,
+      extraClasses: `deck-card battle-hand-card character-size-compact battle-vertical-card ${selectedClass}`,
       ariaLabel: `Carta en mano ${card.name}`,
     });
   }).join('') || '<p>No tienes cartas en mano.</p>';
@@ -1237,7 +1237,7 @@ function renderBattleCharacterCard(card, { hidden = false, obscured = false } = 
     return '<span class="battle-slot-empty">Carta</span>';
   }
   return renderSharedCharacterCard(card, {
-    extraClasses: `battle-field-card character-size-compact ${obscured ? 'battle-facedown-owner' : ''}`,
+    extraClasses: `battle-field-card character-size-compact battle-vertical-card ${obscured ? 'battle-facedown-owner' : ''}`,
     staticCard: true,
   });
 }
