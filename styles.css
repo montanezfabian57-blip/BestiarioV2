@@ -205,6 +205,10 @@ body::before {
   animation: developmentGlow 1.8s ease-in-out infinite alternate;
 }
 
+.experience-outcome-card-preview {
+  margin: 0.75rem 0 0.4rem;
+}
+
 @keyframes developmentGlow {
   from { filter: saturate(1.05) brightness(1); }
   to { filter: saturate(1.2) brightness(1.08); }
