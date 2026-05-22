@@ -1004,7 +1004,10 @@ function getBotPreferredAttack(session, botUid) {
 }
 
 function getPlayerState(session, uid) {
-  return (session.playerStates || {})[uid] || { hand: [], deck: [] };
+  const state = (session.playerStates || {})[uid] || {};
+  const hand = Array.isArray(state.hand) ? state.hand : [];
+  const deck = Array.isArray(state.deck) ? state.deck : [];
+  return { ...state, hand, deck };
 }
 
 function getStatValue(character, attribute) {
