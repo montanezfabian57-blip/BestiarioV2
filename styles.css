@@ -1489,3 +1489,65 @@ body::before {
   border-radius: 6px;
   margin-top: 0.4rem;
 }
+
+/* Layout de batalla pantalla completa: 3 filas izquierdas + 1 columna derecha */
+.battle-arena-modal {
+  background: rgba(5, 5, 8, 0.92);
+  padding: 0;
+}
+
+.battle-arena-card {
+  width: 100vw;
+  height: 100vh;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 0;
+  overflow: hidden;
+}
+
+.battle-main-grid {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  min-height: 0;
+}
+
+.battle-main-row {
+  min-height: 0;
+  padding: 0.7rem;
+  border-right: 1px solid rgba(196, 152, 70, 0.35);
+  border-bottom: 1px solid rgba(196, 152, 70, 0.35);
+  background: linear-gradient(160deg, rgba(40, 44, 52, 0.9), rgba(23, 26, 31, 0.94));
+}
+
+.battle-main-row:last-child {
+  border-bottom: 0;
+}
+
+.battle-side-column {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  background: linear-gradient(160deg, rgba(53, 44, 33, 0.95), rgba(31, 25, 18, 0.95));
+}
+
+.battle-turn-label {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.battle-close-btn {
+  width: 100%;
+}
+
+.battle-hand,
+.battle-slots {
+  height: 100%;
+  align-content: start;
+}
