@@ -1015,8 +1015,8 @@ body::before {
 }
 
 .battle-hand {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  justify-content: stretch;
+  grid-template-columns: repeat(5, minmax(92px, 128px));
+  justify-content: space-between;
 }
 
 .battle-hand-card {
@@ -1024,7 +1024,8 @@ body::before {
 }
 
 .battle-slots {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(92px, 128px));
+  justify-content: space-between;
 }
 
 .battle-slot {
@@ -1044,7 +1045,7 @@ body::before {
   height: 100vh;
   max-height: 100vh;
   border-radius: 0;
-  padding: 1rem 1.2rem;
+  padding: 0.25rem 0.8rem 0.7rem;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 230px;
   gap: 0.9rem;
@@ -1055,8 +1056,8 @@ body::before {
   grid-column: 1;
   display: grid;
   grid-template-rows: repeat(3, minmax(0, 1fr));
-  gap: clamp(0.5rem, 1vh, 0.9rem);
-  padding: clamp(0.6rem, 1vh, 1rem);
+  gap: clamp(0.45rem, 0.9vh, 0.8rem);
+  padding: clamp(0.3rem, 0.6vh, 0.55rem);
   min-height: 0;
   height: 100%;
   border-radius: 18px;
@@ -1121,7 +1122,8 @@ body::before {
 }
 
 .battle-slot {
-  min-height: clamp(150px, 22vh, 220px);
+  min-height: clamp(168px, 25vh, 240px);
+  aspect-ratio: 2 / 3;
   padding: 0;
   border: 1px solid rgba(181, 192, 209, 0.5);
   background:
@@ -1143,12 +1145,12 @@ body::before {
 @media (max-width: 1100px) {
   .battle-hand,
   .battle-slots {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(82px, 1fr));
     gap: 0.45rem;
   }
 
   .battle-slot {
-    min-height: clamp(125px, 18vh, 185px);
+    min-height: clamp(145px, 22vh, 205px);
   }
 }
 
@@ -1186,8 +1188,8 @@ body::before {
 }
 
 .battle-mini-name { padding: 0.4rem; font-weight: 700; text-align: center; background: rgba(0,0,0,.4);} 
-.battle-mini-image { width: 100%; height: clamp(78px, 10vh, 120px); object-fit: cover; }
-.battle-mini-meta, .battle-mini-stats { font-size: .78rem; padding: .25rem .35rem; background: rgba(0,0,0,.35);}
+.battle-mini-image { width: 100%; height: clamp(102px, 14vh, 160px); object-fit: contain; background: rgba(0, 0, 0, 0.32); }
+.battle-mini-meta, .battle-mini-stats { font-size: .72rem; padding: .2rem .3rem; background: rgba(0,0,0,.35);}
 .battle-mini-meta .character-type-clan-tag { font-size: .72rem; }
 .battle-facedown-plate {
   display: grid;
