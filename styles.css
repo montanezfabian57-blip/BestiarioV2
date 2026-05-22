@@ -1023,7 +1023,7 @@ body::before {
   width: 100%;
 }
 
-.battle-slots {
+
   grid-template-columns: repeat(5, minmax(40px, 55px));
   justify-content: start;
 }
@@ -1530,15 +1530,16 @@ body::before {
   height: 100%;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  align-content: stretch;
+  justify-items: center; /* Centra las cartas horizontalmente */
+  align-items: center;
   gap: 0.6rem;
 }
 
 .battle-hand {
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  align-content: stretch;
+  justify-items: center; /* Centra las cartas horizontalmente */
+  align-items: center;
   gap: 0.6rem;
 }
 
@@ -1572,7 +1573,18 @@ body::before {
   border: 1px dashed rgba(196, 152, 70, 0.25);
   border-radius: 10px;
 }
-
+.battle-slot,
+.battle-hand .character-card {
+  width: 100%;
+  max-width: 130px; /* Haz este número más chico si las quieres aún más delgadas */
+  aspect-ratio: 2 / 3; /* Mantiene la proporción clásica de una carta */
+  height: auto; 
+  margin: 0 auto;
+}
+.battle-main-row .character-card-image {
+  height: 100%;
+  object-fit: cover;
+}
 .battle-side-bottom {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
