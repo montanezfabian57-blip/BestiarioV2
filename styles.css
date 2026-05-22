@@ -1015,7 +1015,7 @@ body::before {
 }
 
 .battle-hand {
-  grid-template-columns: repeat(5, minmax(46px, 64px));
+  grid-template-columns: repeat(5, minmax(20px, 40px));
   justify-content: start;
 }
 
