@@ -111,6 +111,10 @@
                         <input type="text" id="char-name" required class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-primary">
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Tipo de personaje</label>
+                        <input type="text" id="char-type" required placeholder="Ej: dragón, humano, demonio" class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-primary">
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-gray-400 mb-1">URL de Imagen <span class="text-xs text-gray-500">(opcional)</span></label>
                         <input type="url" id="char-image" placeholder="https://..." class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-primary">
                         <p class="text-xs text-gray-500 mt-1">Si no agregas imagen, se mostrará una silueta del personaje.</p>
@@ -278,23 +282,12 @@
                     </div>
                     <input type="hidden" id="eq-id">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div><label class="inventory-label">Tipo</label><select id="eq-type" class="inventory-input" onchange="syncEquipmentFormByType()"><option>Arma</option><option>Armadura</option><option>Artefacto / Reliquia</option><option>Montura / Vehículo</option><option>Refugio / Territorio</option></select></div>
+                        <div><label class="inventory-label">Tipo</label><select id="eq-type" class="inventory-input" onchange="syncEquipmentFormByType()"><option>Arma</option><option>Armadura</option><option>Artefacto / Reliquia</option><option>Montura</option><option>Territorio</option></select></div>
                         <div><label class="inventory-label">Nombre</label><input id="eq-name" required placeholder="Ej: Espada del Alba" class="inventory-input"></div>
-                        <div><label class="inventory-label">Imagen del objeto</label><input id="eq-image" placeholder="URL de imagen opcional" class="inventory-input"></div>
+                        <div><label class="inventory-label">Imagen</label><input id="eq-image" placeholder="URL de imagen opcional" class="inventory-input"></div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
-                        <div><label class="inventory-label">Atributo principal</label><select id="eq-attr" class="inventory-input"><option value="INT">Inteligencia</option><option value="STR">Fuerza</option><option value="SPD">Velocidad</option><option value="MAG">Magia</option></select></div>
-                        <div><label class="inventory-label">Potencia base</label><input id="eq-power" type="number" value="0" class="inventory-input"></div>
-                        <div><label class="inventory-label">Modo</label><select id="eq-mode" class="inventory-input"><option value="add">Sumar puntos</option><option value="buff">Aumentar %</option><option value="debuff">Disminuir %</option></select></div>
-                        <div><label class="inventory-label">Objetivo</label><select id="eq-target" class="inventory-input"><option value="self">Propio</option><option value="ally">Aliados</option><option value="enemy">Rivales</option></select></div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                        <div><label class="inventory-label">Afinidad superior (+%) contra personajes o tipos</label><input id="eq-superior" placeholder="dragón +50%, Carlos +25%" class="inventory-input"></div>
-                        <div><label class="inventory-label">Afinidad inferior (-%) contra personajes o tipos</label><input id="eq-inferior" placeholder="fantasma -30%, Ana -10%" class="inventory-input"></div>
-                        <div><label class="inventory-label">Inmunidad / nunca funciona (0)</label><input id="eq-immune" placeholder="Lucía, no-muertos" class="inventory-input"></div>
-                        <div><label class="inventory-label">Condición de activación</label><input id="eq-condition" placeholder="Solo frente a demonios; nunca contra Elena" class="inventory-input"></div>
-                    </div>
-                    <textarea id="eq-notes" rows="2" placeholder="Reglas narrativas, excepciones o detalles caóticos de la reliquia..." class="inventory-input mt-4"></textarea>
+                    <textarea id="eq-notes" rows="3" placeholder="Narrativa redactada por el usuario..." class="inventory-input mt-4"></textarea>
+                    <div id="eq-dynamic" class="space-y-4 mt-4"></div>
                     <button class="mt-4 w-full bg-primary hover:bg-indigo-600 text-white font-bold py-2 rounded-lg">Guardar posesión</button>
                 </form>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="equipment-list"></div>
@@ -319,9 +312,9 @@
                 <form id="mental-form" class="bg-purple-950/20 border border-purple-700/50 rounded-xl p-4">
                     <div class="flex items-center justify-between gap-3 mb-4"><div><h4 class="font-bold text-white">Crear o editar hito mental</h4><p class="text-xs text-gray-500">Configura redistribuciones, detonantes de miedo y agravantes de debilidad.</p></div><button type="button" onclick="resetMentalForm()" class="bg-gray-800 hover:bg-gray-700 text-xs font-bold px-3 py-2 rounded-lg border border-gray-600">Limpiar</button></div>
                     <input type="hidden" id="mental-id">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="inventory-label">Tipo</label><select id="mental-type" class="mental-input" onchange="syncMentalFormByType()"><option>Acontecimiento</option><option>Sabiduría / Revelación</option><option>Miedo / Trauma</option><option>Debilidad</option><option>Mutación</option></select></div><div><label class="inventory-label">Nombre</label><input id="mental-name" required placeholder="Ej: Noche del Abismo" class="mental-input"></div><div><label class="inventory-label">Valor X / porcentaje agravado</label><input id="mental-value" type="number" value="25" class="mental-input"></div></div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"><div><label class="inventory-label">Atributo que aumenta</label><select id="mental-plus" class="mental-input"></select></div><div><label class="inventory-label">Atributo que disminuye</label><select id="mental-minus" class="mental-input"></select></div><div><label class="inventory-label">Detonante del Miedo</label><input id="mental-trigger" placeholder="Nombre o tipo: dragón, Carlos..." class="mental-input"></div><div><label class="inventory-label">Agravante de Debilidad</label><input id="mental-aggravator" placeholder="Contra quién se activa" class="mental-input"></div></div>
-                    <textarea id="mental-notes" rows="2" placeholder="Descripción narrativa del estado mental o físico..." class="mental-input mt-4"></textarea>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="inventory-label">Tipo</label><select id="mental-type" class="mental-input" onchange="syncMentalFormByType()"><option>Acontecimiento</option><option>Sabiduría</option><option>Miedo</option><option>Debilidad</option><option>Mutación</option></select></div><div><label class="inventory-label">Nombre</label><input id="mental-name" required placeholder="Ej: Noche del Abismo" class="mental-input"></div><div><label class="inventory-label">Imagen</label><input id="mental-image" placeholder="URL de imagen opcional" class="mental-input"></div></div>
+                    <textarea id="mental-notes" rows="3" placeholder="Narrativa redactada por el usuario..." class="mental-input mt-4"></textarea>
+                    <div id="mental-dynamic" class="space-y-4 mt-4"></div>
                     <button class="mt-4 w-full bg-purple-700 hover:bg-purple-600 text-white font-bold py-2 rounded-lg">Guardar hito mental</button>
                 </form>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="mental-list"></div>
@@ -450,6 +443,7 @@
             if (saved) state = JSON.parse(saved);
             state.characters.forEach(char => {
                 char.pendingMilestones = char.pendingMilestones || 0;
+                char.type = char.type || '';
                 char.story = cleanHandwrittenStory(char.story);
                 char.milestones = (char.milestones || []).map(milestone => {
                     const normalized = normalizeMilestone(milestone);
@@ -614,7 +608,11 @@
                 inferior: item.inferior || '',
                 immune: item.immune || '',
                 condition: item.condition || '',
-                notes: item.notes || ''
+                notes: item.notes || '',
+                superiorCharacters: item.superiorCharacters || [], superiorTypes: item.superiorTypes || [], superiorPercent: Number(item.superiorPercent || 0),
+                inferiorCharacters: item.inferiorCharacters || [], inferiorTypes: item.inferiorTypes || [], inferiorPercent: Number(item.inferiorPercent || 0),
+                immuneCharacters: item.immuneCharacters || [], immuneTypes: item.immuneTypes || [],
+                affectedCharacters: item.affectedCharacters || [], affectedTypes: item.affectedTypes || []
             };
         }
 
@@ -629,7 +627,10 @@
                 minusAttr: item.minusAttr || 'STR',
                 trigger: item.trigger || '',
                 aggravator: item.aggravator || '',
-                notes: item.notes || ''
+                notes: item.notes || '',
+                image: item.image || '',
+                triggerCharacters: item.triggerCharacters || [], triggerTypes: item.triggerTypes || [],
+                aggravatorCharacters: item.aggravatorCharacters || [], aggravatorTypes: item.aggravatorTypes || [], aggravatorPercent: Number(item.aggravatorPercent || 0)
             };
         }
 
@@ -673,6 +674,39 @@
             const destiny = normalizeDestiny(char.destiny);
             if (destiny.blessingAttr) char.stats[destiny.blessingAttr] = 100;
             if (destiny.curseAttr) char.stats[destiny.curseAttr] = 0;
+        }
+
+
+
+        function characterTypeOptionsHtml(selected = []) {
+            const types = [...new Set(state.characters.map(c => c.type).filter(Boolean))].sort();
+            return types.map(type => `<option value="${escapeAttr(type)}" ${selected.includes(type) ? 'selected' : ''}>${escapeHtml(type)}</option>`).join('');
+        }
+
+        function selectedOptions(id) {
+            const el = document.getElementById(id);
+            return el ? Array.from(el.selectedOptions).map(o => o.value) : [];
+        }
+
+        function compactTargets(charIds = [], typeNames = []) {
+            const names = charIds.map(id => state.characters.find(c => c.id === id)?.name).filter(Boolean);
+            return [...names, ...typeNames].join(', ');
+        }
+
+        function targetPickerHtml(prefix, label, selectedCharacters = [], selectedTypes = [], withPercent = false, percentValue = 0) {
+            return `<div class="rounded-lg border border-gray-700 bg-black/20 p-3">
+                <div class="flex items-center justify-between gap-2 mb-2"><label class="inventory-label mb-0">${label}</label>${withPercent ? `<input id="${prefix}-percent" type="number" value="${escapeAttr(percentValue)}" placeholder="%" class="inventory-input max-w-28">` : ''}</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div><button type="button" onclick="togglePicker('${prefix}-chars')" class="w-full bg-gray-800 hover:bg-gray-700 text-xs font-bold px-3 py-2 rounded-lg border border-gray-600">Agregar personaje</button><select id="${prefix}-chars" multiple size="5" class="inventory-input hidden mt-2">${rosterOptionsHtml(selectedCharacters, currentInventoryCharId || currentMentalCharId || '')}</select></div>
+                    <div><button type="button" onclick="togglePicker('${prefix}-types')" class="w-full bg-gray-800 hover:bg-gray-700 text-xs font-bold px-3 py-2 rounded-lg border border-gray-600">Agregar tipo</button><select id="${prefix}-types" multiple size="5" class="inventory-input hidden mt-2">${characterTypeOptionsHtml(selectedTypes)}</select></div>
+                </div>
+            </div>`;
+        }
+
+        function togglePicker(id) { document.getElementById(id)?.classList.toggle('hidden'); }
+
+        function attrOptions(keys) {
+            return ATTRS.filter(a => keys.includes(a.key)).map(a => `<option value="${a.key}">${a.name}</option>`).join('');
         }
 
         function rosterOptionsHtml(selected = [], excludeId = '') {
@@ -737,6 +771,7 @@
             const newChar = {
                 id: generateId(),
                 name: document.getElementById('char-name').value,
+                type: document.getElementById('char-type').value.trim(),
                 image: document.getElementById('char-image').value.trim(),
                 story: document.getElementById('char-story').value,
                 stats: {
@@ -795,6 +830,7 @@
                             <h3 class="font-bold text-lg text-white truncate">${getDisplayName(char)}</h3>
                             <div class="shrink-0 flex gap-1"><button title="Inventario" onclick="event.stopPropagation(); openInventoryModal('${char.id}')" class="bg-red-950/70 hover:bg-red-900 border border-red-700 rounded-lg px-2 py-1 text-sm">⚔️</button><button title="Mente" onclick="event.stopPropagation(); openMentalModal('${char.id}')" class="bg-purple-950/70 hover:bg-purple-900 border border-purple-700 rounded-lg px-2 py-1 text-sm">🧠</button><button title="Mundo" onclick="event.stopPropagation(); openWorldModal('${char.id}')" class="bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-700 rounded-lg px-2 py-1 text-sm">🌎</button><button title="Destino" onclick="event.stopPropagation(); openDestinyModal('${char.id}')" class="bg-sky-950/70 hover:bg-sky-900 border border-sky-700 rounded-lg px-2 py-1 text-sm">🔮</button></div>
                         </div>
+                        <p class="text-xs text-gray-400 mb-1">Tipo: ${escapeHtml(char.type || '—')}</p>
                         <p class="text-sm text-primary mb-2">Nivel ${char.level} | ${char.battles} Batallas | ⚔️ ${inventoryCount} | 🧠 ${mentalCount}</p>
                         ${getAvailableMilestoneSlots(char) > 0 ? '<p class="text-xs text-yellow-300 font-bold animate-pulse mb-2">Agregar un hito</p>' : ''}
                         <div class="flex gap-2 text-xs">
@@ -1034,21 +1070,22 @@
         function resetEquipmentForm(clearId = true) {
             document.getElementById('equipment-form').reset();
             if (clearId) document.getElementById('eq-id').value = '';
-            document.getElementById('eq-power').value = 0;
+            window.__editingEquipment = null;
             syncEquipmentFormByType();
         }
 
         function syncEquipmentFormByType() {
             const type = document.getElementById('eq-type').value;
-            const attr = document.getElementById('eq-attr');
-            const mode = document.getElementById('eq-mode');
-            const target = document.getElementById('eq-target');
-            attr.disabled = false; mode.disabled = false; target.disabled = false;
-            if (type === 'Arma') { attr.value = ['STR', 'MAG'].includes(attr.value) ? attr.value : 'STR'; mode.value = 'add'; target.value = 'self'; }
-            if (type === 'Armadura') { mode.value = 'add'; target.value = 'self'; }
-            if (type === 'Artefacto / Reliquia') { mode.disabled = false; target.disabled = false; }
-            if (type === 'Montura / Vehículo') { attr.value = 'SPD'; mode.value = 'buff'; target.value = 'self'; attr.disabled = true; }
-            if (type === 'Refugio / Territorio') { mode.value = 'buff'; target.value = 'self'; }
+            const box = document.getElementById('eq-dynamic');
+            const item = window.__editingEquipment || {};
+            const commonAffinities = `${targetPickerHtml('eq-superior', 'Afinidad superior: personajes o tipos acumulables', item.superiorCharacters, item.superiorTypes, true, item.superiorPercent)}${targetPickerHtml('eq-inferior', 'Afinidad inferior: personajes o tipos acumulables', item.inferiorCharacters, item.inferiorTypes, true, item.inferiorPercent)}${targetPickerHtml('eq-immune', 'Inmunidad: personajes o tipos acumulables', item.immuneCharacters, item.immuneTypes)}`;
+            if (type === 'Arma') box.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Atributo que modifica</label><select id="eq-attr" class="inventory-input">${attrOptions(['MAG','STR'])}</select></div><div><label class="inventory-label">Potencia (1 a 100)</label><input id="eq-power" type="number" min="1" max="100" value="${escapeAttr(item.power || 1)}" class="inventory-input"></div></div>${commonAffinities}`;
+            if (type === 'Armadura') box.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Atributo que modifica</label><select id="eq-attr" class="inventory-input">${attrOptions(['INT','SPD'])}</select></div><div><label class="inventory-label">Potencia (1 a 35)</label><input id="eq-power" type="number" min="1" max="35" value="${escapeAttr(item.power || 1)}" class="inventory-input"></div></div>${commonAffinities}`;
+            if (type === 'Artefacto / Reliquia') box.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-4 gap-4"><div><label class="inventory-label">Atributo que modifica</label><select id="eq-attr" class="inventory-input">${attrOptions(['MAG','STR'])}</select></div><div><label class="inventory-label">Efecto</label><select id="eq-mode" class="inventory-input"><option value="buff">Aumenta</option><option value="debuff">Disminuye</option></select></div><div><label class="inventory-label">Puntos</label><input id="eq-power" type="number" min="1" value="${escapeAttr(item.power || 1)}" class="inventory-input"></div><input id="eq-target" type="hidden" value="ally"></div>${targetPickerHtml('eq-affected', 'Personaje o tipo de personaje que afecta', item.affectedCharacters, item.affectedTypes)}${targetPickerHtml('eq-immune', 'Personajes inmunes', item.immuneCharacters, item.immuneTypes)}${targetPickerHtml('eq-superior', 'Afinidad superior y porcentaje que aumenta el efecto', item.superiorCharacters, item.superiorTypes, true, item.superiorPercent)}${targetPickerHtml('eq-inferior', 'Afinidad inferior y porcentaje que reduce el efecto', item.inferiorCharacters, item.inferiorTypes, true, item.inferiorPercent)}`;
+            if (type === 'Montura') box.innerHTML = `<div><label class="inventory-label">Cantidad de puntos que aumenta la velocidad propia</label><input id="eq-power" type="number" min="1" value="${escapeAttr(item.power || 1)}" class="inventory-input"></div><input id="eq-attr" type="hidden" value="SPD"><input id="eq-mode" type="hidden" value="add"><input id="eq-target" type="hidden" value="self">`;
+            if (type === 'Territorio') box.innerHTML = `<div><label class="inventory-label">Porcentaje que aumenta todos los atributos propios</label><input id="eq-power" type="number" min="1" max="100" value="${escapeAttr(item.power || 1)}" class="inventory-input"></div><input id="eq-attr" type="hidden" value="ALL"><input id="eq-mode" type="hidden" value="buff"><input id="eq-target" type="hidden" value="self">`;
+            if (item.attr && document.getElementById('eq-attr')) document.getElementById('eq-attr').value = item.attr;
+            if (item.mode && document.getElementById('eq-mode')) document.getElementById('eq-mode').value = item.mode;
         }
 
         document.getElementById('equipment-form').addEventListener('submit', (e) => {
@@ -1056,27 +1093,24 @@
             const char = state.characters.find(c => c.id === currentInventoryCharId);
             if (!char) return;
             char.equipment = char.equipment || [];
+            const type = document.getElementById('eq-type').value;
             const item = normalizeEquipment({
-                id: document.getElementById('eq-id').value || generateId(),
-                type: document.getElementById('eq-type').value,
-                name: document.getElementById('eq-name').value.trim(),
-                image: document.getElementById('eq-image').value.trim(),
-                attr: document.getElementById('eq-type').value === 'Montura / Vehículo' ? 'SPD' : document.getElementById('eq-attr').value,
-                power: document.getElementById('eq-power').value,
-                mode: document.getElementById('eq-mode').value,
-                target: document.getElementById('eq-target').value,
-                superior: document.getElementById('eq-superior').value.trim(),
-                inferior: document.getElementById('eq-inferior').value.trim(),
-                immune: document.getElementById('eq-immune').value.trim(),
-                condition: document.getElementById('eq-condition').value.trim(),
-                notes: document.getElementById('eq-notes').value.trim()
+                id: document.getElementById('eq-id').value || generateId(), type,
+                name: document.getElementById('eq-name').value.trim(), image: document.getElementById('eq-image').value.trim(),
+                attr: document.getElementById('eq-attr')?.value || 'STR', power: document.getElementById('eq-power')?.value || 0,
+                mode: document.getElementById('eq-mode')?.value || 'add', target: document.getElementById('eq-target')?.value || 'self',
+                notes: document.getElementById('eq-notes').value.trim(),
+                superiorCharacters: selectedOptions('eq-superior-chars'), superiorTypes: selectedOptions('eq-superior-types'), superiorPercent: document.getElementById('eq-superior-percent')?.value || 0,
+                inferiorCharacters: selectedOptions('eq-inferior-chars'), inferiorTypes: selectedOptions('eq-inferior-types'), inferiorPercent: document.getElementById('eq-inferior-percent')?.value || 0,
+                immuneCharacters: selectedOptions('eq-immune-chars'), immuneTypes: selectedOptions('eq-immune-types'),
+                affectedCharacters: selectedOptions('eq-affected-chars'), affectedTypes: selectedOptions('eq-affected-types')
             });
+            item.superior = compactTargets(item.superiorCharacters, item.superiorTypes); item.inferior = compactTargets(item.inferiorCharacters, item.inferiorTypes); item.immune = compactTargets(item.immuneCharacters, item.immuneTypes); item.condition = compactTargets(item.affectedCharacters, item.affectedTypes);
             if (!item.name) return alert('Debes nombrar la posesión.');
             const index = char.equipment.findIndex(eq => eq.id === item.id);
             if (index < 0 && !canAddMilestone(char)) return alert('Solo puedes designar 1 hito por cada 30 combates totales del personaje.');
             if (index >= 0) char.equipment[index] = item; else char.equipment.push(item);
-            saveState();
-            openInventoryModal(char.id);
+            window.__editingEquipment = null; saveState(); openInventoryModal(char.id);
         });
 
         function renderEquipmentList(char) {
@@ -1116,18 +1150,11 @@
             const char = state.characters.find(c => c.id === currentInventoryCharId);
             const item = (char?.equipment || []).map(normalizeEquipment).find(eq => eq.id === itemId);
             if (!item) return;
+            window.__editingEquipment = item;
             document.getElementById('eq-id').value = item.id;
             document.getElementById('eq-type').value = item.type;
             document.getElementById('eq-name').value = item.name;
             document.getElementById('eq-image').value = item.image;
-            document.getElementById('eq-attr').value = item.attr;
-            document.getElementById('eq-power').value = item.power;
-            document.getElementById('eq-mode').value = item.mode;
-            document.getElementById('eq-target').value = item.target;
-            document.getElementById('eq-superior').value = item.superior;
-            document.getElementById('eq-inferior').value = item.inferior;
-            document.getElementById('eq-immune').value = item.immune;
-            document.getElementById('eq-condition').value = item.condition;
             document.getElementById('eq-notes').value = item.notes;
             syncEquipmentFormByType();
         }
@@ -1161,29 +1188,26 @@
             currentMentalCharId = null;
         }
 
-        function hydrateMentalAttrOptions() {
-            const html = ATTRS.map(a => `<option value="${a.key}">${a.name}</option>`).join('');
-            document.getElementById('mental-plus').innerHTML = html;
-            document.getElementById('mental-minus').innerHTML = html;
-        }
+        function hydrateMentalAttrOptions() {}
 
         function resetMentalForm(clearId = true) {
             document.getElementById('mental-form').reset();
             if (clearId) document.getElementById('mental-id').value = '';
-            document.getElementById('mental-value').value = 25;
+            window.__editingMental = null;
             syncMentalFormByType();
         }
 
         function syncMentalFormByType() {
             const type = document.getElementById('mental-type').value;
-            const value = document.getElementById('mental-value');
-            const plus = document.getElementById('mental-plus');
-            const minus = document.getElementById('mental-minus');
-            [value, plus, minus, document.getElementById('mental-trigger'), document.getElementById('mental-aggravator')].forEach(el => el.disabled = false);
-            if (type === 'Sabiduría / Revelación') { value.value = 25; plus.value = 'INT'; value.disabled = true; plus.disabled = true; minus.disabled = true; }
-            if (type === 'Miedo / Trauma') { value.value = 50; value.disabled = true; plus.disabled = true; minus.disabled = true; }
-            if (type === 'Acontecimiento') value.value = 25;
-            if (type === 'Debilidad') { value.value = 25; plus.disabled = true; }
+            const box = document.getElementById('mental-dynamic');
+            const item = window.__editingMental || {};
+            if (type === 'Acontecimiento') box.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="inventory-label">Atributo al que se le agregan puntos</label><select id="mental-plus" class="mental-input">${attrOptions(['INT','STR','SPD','MAG'])}</select></div><div><label class="inventory-label">Atributo al que se le restan puntos</label><select id="mental-minus" class="mental-input">${attrOptions(['INT','STR','SPD','MAG'])}</select></div><div><label class="inventory-label">Cantidad de puntos</label><input id="mental-value" type="number" min="1" value="${escapeAttr(item.value || 25)}" class="mental-input"></div></div>`;
+            if (type === 'Sabiduría') box.innerHTML = `<div><label class="inventory-label">Cantidad de puntos que se suma a inteligencia</label><input id="mental-value" type="number" min="1" value="${escapeAttr(item.value || 25)}" class="mental-input"></div><input id="mental-plus" type="hidden" value="INT"><input id="mental-minus" type="hidden" value="STR">`;
+            if (type === 'Miedo') box.innerHTML = `${targetPickerHtml('mental-trigger', 'Tipo de personaje o personaje con el que se activa (acumulable)', item.triggerCharacters, item.triggerTypes)}<input id="mental-value" type="hidden" value="50"><input id="mental-plus" type="hidden" value="INT"><input id="mental-minus" type="hidden" value="STR"><p class="text-xs text-purple-200">Al activarse reduce el 50% de todos los atributos.</p>`;
+            if (type === 'Debilidad') box.innerHTML = `<div><label class="inventory-label">Atributo al que se le disminuye -25</label><select id="mental-minus" class="mental-input">${attrOptions(['INT','STR','SPD','MAG'])}</select></div>${targetPickerHtml('mental-aggravator', 'Personaje o tipo que aumenta la disminución y porcentaje que aumenta', item.aggravatorCharacters, item.aggravatorTypes, true, item.aggravatorPercent)}<input id="mental-value" type="hidden" value="25"><input id="mental-plus" type="hidden" value="INT">`;
+            if (type === 'Mutación') box.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Atributo al que se le agregan puntos</label><select id="mental-plus" class="mental-input">${attrOptions(['INT','STR','SPD','MAG'])}</select></div><div><label class="inventory-label">Cantidad de puntos que se suma</label><input id="mental-value" type="number" min="1" value="${escapeAttr(item.value || 25)}" class="mental-input"></div></div><input id="mental-minus" type="hidden" value="ALL"><p class="text-xs text-lime-200">La misma cantidad se resta a los demás atributos.</p>`;
+            if (item.plusAttr && document.getElementById('mental-plus')) document.getElementById('mental-plus').value = item.plusAttr;
+            if (item.minusAttr && document.getElementById('mental-minus')) document.getElementById('mental-minus').value = item.minusAttr;
         }
 
         document.getElementById('mental-form').addEventListener('submit', (e) => {
@@ -1193,22 +1217,20 @@
             char.mental = char.mental || [];
             const type = document.getElementById('mental-type').value;
             const item = normalizeMentalMilestone({
-                id: document.getElementById('mental-id').value || generateId(),
-                type,
-                name: document.getElementById('mental-name').value.trim(),
-                value: type === 'Sabiduría / Revelación' ? 25 : (type === 'Miedo / Trauma' ? 50 : document.getElementById('mental-value').value),
-                plusAttr: type === 'Sabiduría / Revelación' ? 'INT' : document.getElementById('mental-plus').value,
-                minusAttr: document.getElementById('mental-minus').value,
-                trigger: document.getElementById('mental-trigger').value.trim(),
-                aggravator: document.getElementById('mental-aggravator').value.trim(),
-                notes: document.getElementById('mental-notes').value.trim()
+                id: document.getElementById('mental-id').value || generateId(), type,
+                name: document.getElementById('mental-name').value.trim(), image: document.getElementById('mental-image').value.trim(),
+                value: document.getElementById('mental-value')?.value || 25,
+                plusAttr: document.getElementById('mental-plus')?.value || 'INT', minusAttr: document.getElementById('mental-minus')?.value || 'STR',
+                notes: document.getElementById('mental-notes').value.trim(),
+                triggerCharacters: selectedOptions('mental-trigger-chars'), triggerTypes: selectedOptions('mental-trigger-types'),
+                aggravatorCharacters: selectedOptions('mental-aggravator-chars'), aggravatorTypes: selectedOptions('mental-aggravator-types'), aggravatorPercent: document.getElementById('mental-aggravator-percent')?.value || 0
             });
+            item.trigger = compactTargets(item.triggerCharacters, item.triggerTypes); item.aggravator = compactTargets(item.aggravatorCharacters, item.aggravatorTypes);
             if (!item.name) return alert('Debes nombrar el hito mental.');
             const index = char.mental.findIndex(ms => ms.id === item.id);
             if (index < 0 && !canAddMilestone(char)) return alert('Solo puedes designar 1 hito por cada 30 combates totales del personaje.');
             if (index >= 0) char.mental[index] = item; else char.mental.push(item);
-            saveState();
-            openMentalModal(char.id);
+            window.__editingMental = null; saveState(); openMentalModal(char.id);
         });
 
         function renderMentalList(char) {
@@ -1223,9 +1245,10 @@
         }
 
         function describeMentalEffect(item, plusName, minusName) {
-            if (item.type === 'Sabiduría / Revelación') return '+25 permanente en Inteligencia.';
-            if (item.type === 'Miedo / Trauma') return 'Reduce todos los atributos un 50% si aparece el detonante.';
-            if (item.type === 'Debilidad') return `-${item.value} en ${minusName}; puede agravarse contra objetivos configurados.`;
+            if (item.type === 'Sabiduría / Revelación' || item.type === 'Sabiduría') return `+${item.value} permanente en Inteligencia.`;
+            if (item.type === 'Miedo / Trauma' || item.type === 'Miedo') return 'Reduce todos los atributos un 50% si aparece el detonante.';
+            if (item.type === 'Debilidad') return `-25 en ${minusName}; el agravante puede aumentar la reducción porcentualmente.`;
+            if (item.type === 'Mutación') return `+${item.value} en ${plusName} y -${item.value} en los demás atributos.`;
             return `+${item.value} en ${plusName} y -${item.value} en ${minusName}.`;
         }
 
@@ -1233,7 +1256,13 @@
             const char = state.characters.find(c => c.id === currentMentalCharId);
             const item = (char?.mental || []).map(normalizeMentalMilestone).find(ms => ms.id === itemId);
             if (!item) return;
-            document.getElementById('mental-id').value = item.id; document.getElementById('mental-type').value = item.type; document.getElementById('mental-name').value = item.name; document.getElementById('mental-value').value = item.value; document.getElementById('mental-plus').value = item.plusAttr; document.getElementById('mental-minus').value = item.minusAttr; document.getElementById('mental-trigger').value = item.trigger; document.getElementById('mental-aggravator').value = item.aggravator; document.getElementById('mental-notes').value = item.notes; syncMentalFormByType();
+            window.__editingMental = item;
+            document.getElementById('mental-id').value = item.id;
+            document.getElementById('mental-type').value = item.type;
+            document.getElementById('mental-name').value = item.name;
+            document.getElementById('mental-image').value = item.image || '';
+            document.getElementById('mental-notes').value = item.notes;
+            syncMentalFormByType();
         }
 
         function deleteMental(itemId) {
@@ -1427,7 +1456,7 @@
             if (!haystack || !targetChar) return false;
             return haystack.split(',').some(raw => {
                 const entry = raw.replace(/[+-]?\d+%?/g, '').trim();
-                return entry && targetChar.name.toLowerCase().includes(entry);
+                return entry && `${targetChar.name} ${targetChar.type || ''}`.toLowerCase().includes(entry);
             });
         }
 
@@ -1447,7 +1476,7 @@
             let percentBuff = 0;
             let percentReduction = 0;
             let protectedSpeedBuff = 0;
-            const hasRefuge = (char.equipment || []).some(eq => normalizeEquipment(eq).type === 'Refugio / Territorio');
+            const hasRefuge = (char.equipment || []).some(eq => ['Refugio / Territorio','Territorio'].includes(normalizeEquipment(eq).type));
 
             if (clanIds.has(char.id)) additive += 25;
             else additive += allies.filter(ally => ally.id !== char.id && areCompanions(char, ally)).length * 10;
@@ -1462,25 +1491,25 @@
                 const isAggravated = entryMatches(item.aggravator, opponent);
                 if (item.type === 'Acontecimiento' || item.type === 'Mutación') {
                     if (item.plusAttr === attrKey) additive += item.value;
-                    if (item.minusAttr === attrKey) additive -= item.value;
+                    if (item.minusAttr === attrKey || (item.type === 'Mutación' && item.plusAttr !== attrKey)) additive -= item.value;
                 }
-                if (item.type === 'Sabiduría / Revelación' && attrKey === 'INT') additive += 25;
-                if (item.type === 'Miedo / Trauma' && isTriggered) percentReduction += 50;
+                if ((item.type === 'Sabiduría / Revelación' || item.type === 'Sabiduría') && attrKey === 'INT') additive += item.value;
+                if ((item.type === 'Miedo / Trauma' || item.type === 'Miedo') && isTriggered) percentReduction += 50;
                 if (item.type === 'Debilidad' && item.minusAttr === attrKey) {
-                    if (isAggravated) percentReduction += Math.max(item.value, 0);
+                    if (isAggravated) percentReduction += Math.max(item.aggravatorPercent || item.value, 0);
                     else additive -= 25;
                 }
             });
 
             (char.equipment || []).map(normalizeEquipment).forEach(item => {
-                if (item.attr !== attrKey && item.type !== 'Refugio / Territorio') return;
+                if (item.attr !== attrKey && !['Refugio / Territorio','Territorio'].includes(item.type)) return;
                 if (entryMatches(item.immune, opponent)) return;
                 let multiplier = 1;
                 if (entryMatches(item.superior, opponent)) multiplier += firstPercent(item.superior) / 100;
                 if (entryMatches(item.inferior, opponent)) multiplier -= firstPercent(item.inferior) / 100;
                 if (item.mode === 'add') additive += item.power * multiplier;
                 if (item.mode === 'buff') {
-                    if (item.type === 'Montura / Vehículo') protectedSpeedBuff += item.power;
+                    if (['Montura / Vehículo','Montura'].includes(item.type)) additive += item.power;
                     else percentBuff += item.power * multiplier;
                 }
                 if (item.mode === 'debuff') percentReduction += item.power * multiplier;
@@ -1488,6 +1517,7 @@
 
             const applyArtifact = (item, affectedChar) => {
                 if (item.attr !== attrKey || entryMatches(item.immune, affectedChar)) return;
+                if (item.condition && !entryMatches(item.condition, affectedChar)) return;
                 let multiplier = 1;
                 if (entryMatches(item.superior, affectedChar)) multiplier += firstPercent(item.superior) / 100;
                 if (entryMatches(item.inferior, affectedChar)) multiplier -= firstPercent(item.inferior) / 100;
