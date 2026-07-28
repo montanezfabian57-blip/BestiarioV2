@@ -329,9 +329,12 @@
             <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-gray-900"><div><h3 id="world-title" class="text-xl font-bold">🌎 Mundo</h3><p class="text-xs text-gray-400 mt-1">Compañeros, clanes, apodos, misiones y deudas que modifican la batalla.</p></div><button onclick="closeWorldModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button></div>
             <div class="flex-1 overflow-y-auto p-6 space-y-6">
                 <form id="world-form" class="bg-emerald-950/20 border border-emerald-700/50 rounded-xl p-4 space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Apodo / Título visible</label><input id="world-title-input" placeholder="El León Sanguinario" class="world-input"></div><div><label class="inventory-label">Compañeros designados</label><select id="world-companions" multiple size="5" class="world-input"></select></div></div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Misión: objetivo ofensivo a vencer</label><input id="world-mission-offense" placeholder="Nombre o tipo de personaje" class="world-input"></div><div><label class="inventory-label">Misión: objetivo defensivo a proteger</label><input id="world-mission-protect" placeholder="Nombre o tipo protegido" class="world-input"></div><div><label class="inventory-label">Deuda: vence a este objetivo para saldarla</label><input id="world-debt-target" placeholder="Nombre o tipo de personaje" class="world-input"></div><div><label class="inventory-label">Estado de deuda</label><select id="world-debt-active" class="world-input"><option value="true">Activa (-5 constante)</option><option value="false">Saldada</option></select></div></div>
-                    <button class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2 rounded-lg">Guardar relaciones y estatus</button>
+                    <div class="flex items-center justify-between gap-3"><div><h4 class="font-bold text-white">Agregar un hito de mundo</h4><p class="text-xs text-gray-500">Cada envío consume 1 hito disponible; no puedes guardar varios hitos en una sola vez.</p></div><button type="button" onclick="resetWorldForm()" class="bg-gray-800 hover:bg-gray-700 text-xs font-bold px-3 py-2 rounded-lg border border-gray-600">Limpiar</button></div>
+                    <input type="hidden" id="world-id">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Tipo de hito</label><select id="world-type" class="world-input" onchange="syncWorldFormByType()"><option>Compañero</option><option>Clan</option><option>Apodo</option><option>Misión Objetivo</option><option>Deuda</option></select></div><div><label class="inventory-label">Nombre / título</label><input id="world-name" required class="world-input" placeholder="Nombre del hito"></div></div>
+                    <textarea id="world-narrative" rows="3" required placeholder="Narrativa redactada por el usuario..." class="world-input"></textarea>
+                    <div id="world-dynamic" class="space-y-4"></div>
+                    <button class="w-full bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-2 rounded-lg">Guardar 1 hito de mundo</button>
                 </form>
                 <div id="world-summary" class="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm"></div>
             </div>
@@ -342,12 +345,17 @@
     <div id="destiny-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center p-4 modal-overlay">
         <div class="bg-card w-full max-w-4xl rounded-xl shadow-2xl border border-sky-700/60 overflow-hidden flex flex-col max-h-[92vh]">
             <div class="flex justify-between items-center p-4 border-b border-gray-800 bg-gray-900"><div><h3 id="destiny-title" class="text-xl font-bold">🔮 Destino</h3><p class="text-xs text-gray-400 mt-1">Maldiciones, bendiciones y juramentos fijan o alteran atributos.</p></div><button onclick="closeDestinyModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button></div>
-            <form id="destiny-form" class="flex-1 overflow-y-auto p-6 space-y-5">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Maldición: atributo bloqueado en 0</label><select id="destiny-curse" class="destiny-input"><option value="">Sin maldición</option></select></div><div><label class="inventory-label">Bendición / Don: atributo fijado en 100</label><select id="destiny-blessing" class="destiny-input"><option value="">Sin bendición</option></select></div></div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="inventory-label">Juramento</label><select id="destiny-oath-path" class="destiny-input"><option value="">Sin juramento</option><option value="risk">Camino del Riesgo (+40, -5 negativos si pierde)</option><option value="overcome">Camino de la Superación (-40, +5 positivos si gana)</option></select></div><div><label class="inventory-label">Atributo del juramento</label><select id="destiny-oath-attr" class="destiny-input"></select></div><div><label class="inventory-label">Nombre narrativo</label><input id="destiny-oath-name" placeholder="Juramento de la Luna" class="destiny-input"></div></div>
-                <textarea id="destiny-notes" rows="3" placeholder="Notas narrativas de la fuerza sobrenatural..." class="destiny-input"></textarea>
-                <button class="w-full bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 rounded-lg">Guardar destino</button>
-            </form>
+            <div class="flex-1 overflow-y-auto p-6 space-y-5">
+                <form id="destiny-form" class="space-y-4 bg-sky-950/20 border border-sky-700/50 rounded-xl p-4">
+                    <div class="flex items-center justify-between gap-3"><div><h4 class="font-bold text-white">Agregar un hito de destino</h4><p class="text-xs text-gray-500">Maldición, bendición o juramento se guardan de a uno y consumen 1 hito disponible.</p></div><button type="button" onclick="resetDestinyForm()" class="bg-gray-800 hover:bg-gray-700 text-xs font-bold px-3 py-2 rounded-lg border border-gray-600">Limpiar</button></div>
+                    <input type="hidden" id="destiny-id">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Tipo</label><select id="destiny-type" class="destiny-input" onchange="syncDestinyFormByType()"><option>Maldición</option><option>Bendición</option><option>Juramento</option></select></div><div><label class="inventory-label">Nombre</label><input id="destiny-name" required class="destiny-input" placeholder="Nombre narrativo"></div></div>
+                    <textarea id="destiny-notes" rows="3" required placeholder="Narrativa..." class="destiny-input"></textarea>
+                    <div id="destiny-dynamic" class="space-y-4"></div>
+                    <button class="w-full bg-sky-700 hover:bg-sky-600 text-white font-bold py-2 rounded-lg">Guardar 1 hito de destino</button>
+                </form>
+                <div id="destiny-list" class="grid grid-cols-1 gap-4 text-sm"></div>
+            </div>
         </div>
     </div>
 
@@ -494,9 +502,9 @@
             const mentalCount = (char.mental || []).length;
             const world = normalizeWorldStatus(char.world);
             const destiny = normalizeDestiny(char.destiny);
-            const hasWorld = Boolean(world.title || world.companions.length || world.missionOffense || world.missionProtect || world.debtTarget);
-            const hasDestiny = Boolean(destiny.curseAttr || destiny.blessingAttr || destiny.oathPath || destiny.oathName || destiny.notes);
-            return Math.max(manualMilestones, equipmentCount + mentalCount + (hasWorld ? 1 : 0) + (hasDestiny ? 1 : 0));
+            const worldCount = (world.milestones || []).length;
+            const destinyCount = (destiny.milestones || []).length;
+            return Math.max(manualMilestones, equipmentCount + mentalCount + worldCount + destinyCount);
         }
 
         function getAvailableMilestoneSlots(char) {
@@ -636,26 +644,67 @@
 
 
 
-        function normalizeWorldStatus(world = {}) {
+        function normalizeWorldMilestone(item = {}) {
             return {
-                title: world.title || '',
-                companions: Array.isArray(world.companions) ? world.companions : [],
-                missionOffense: world.missionOffense || '',
-                missionProtect: world.missionProtect || '',
-                debtTarget: world.debtTarget || '',
-                debtActive: Boolean(world.debtActive && world.debtTarget)
+                id: item.id || generateId(),
+                type: item.type || 'Apodo',
+                name: item.name || item.title || 'Sin nombre',
+                narrative: item.narrative || item.notes || '',
+                companionId: item.companionId || '',
+                memberIds: Array.isArray(item.memberIds) ? item.memberIds : [],
+                missionMode: item.missionMode || 'destroy',
+                targetCharacters: item.targetCharacters || [],
+                targetTypes: item.targetTypes || [],
+                debtActive: item.debtActive !== false
+            };
+        }
+
+        function normalizeWorldStatus(world = {}) {
+            const migrated = [];
+            if (world.title) migrated.push({ type: 'Apodo', name: world.title, narrative: '' });
+            (Array.isArray(world.companions) ? world.companions : []).forEach(id => migrated.push({ type: 'Compañero', name: 'Compañero', companionId: id, narrative: '' }));
+            if (world.missionOffense) migrated.push({ type: 'Misión Objetivo', name: 'Misión ofensiva', missionMode: 'destroy', targetTypes: [world.missionOffense], narrative: '' });
+            if (world.missionProtect) migrated.push({ type: 'Misión Objetivo', name: 'Misión defensiva', missionMode: 'protect', targetTypes: [world.missionProtect], narrative: '' });
+            if (world.debtTarget) migrated.push({ type: 'Deuda', name: 'Deuda', targetTypes: [world.debtTarget], debtActive: Boolean(world.debtActive), narrative: '' });
+            const milestones = (Array.isArray(world.milestones) && world.milestones.length ? world.milestones : migrated).map(normalizeWorldMilestone);
+            const companions = milestones.filter(m => m.type === 'Compañero' && m.companionId).map(m => m.companionId);
+            const nickname = milestones.find(m => m.type === 'Apodo');
+            const debt = milestones.find(m => m.type === 'Deuda' && m.debtActive);
+            const offense = milestones.find(m => m.type === 'Misión Objetivo' && m.missionMode === 'destroy');
+            const protect = milestones.find(m => m.type === 'Misión Objetivo' && m.missionMode === 'protect');
+            return {
+                milestones,
+                title: nickname?.name || '',
+                companions,
+                missionOffense: compactTargets(offense?.targetCharacters || [], offense?.targetTypes || []),
+                missionProtect: compactTargets(protect?.targetCharacters || [], protect?.targetTypes || []),
+                debtTarget: compactTargets(debt?.targetCharacters || [], debt?.targetTypes || []),
+                debtActive: Boolean(debt)
+            };
+        }
+
+        function normalizeDestinyMilestone(item = {}) {
+            return {
+                id: item.id || generateId(),
+                type: item.type || 'Maldición',
+                name: item.name || item.oathName || 'Sin nombre',
+                narrative: item.narrative || item.notes || '',
+                casterId: item.casterId || '',
+                attr: item.attr || item.curseAttr || item.blessingAttr || item.oathAttr || 'STR',
+                oathPath: item.oathPath || 'risk'
             };
         }
 
         function normalizeDestiny(destiny = {}) {
-            return {
-                curseAttr: destiny.curseAttr || '',
-                blessingAttr: destiny.blessingAttr || '',
-                oathPath: destiny.oathPath || '',
-                oathAttr: destiny.oathAttr || 'STR',
-                oathName: destiny.oathName || '',
-                notes: destiny.notes || ''
-            };
+            const migrated = [];
+            if (destiny.curseAttr) migrated.push({ type: 'Maldición', name: 'Maldición', attr: destiny.curseAttr, narrative: destiny.notes || '' });
+            if (destiny.blessingAttr) migrated.push({ type: 'Bendición', name: 'Bendición', attr: destiny.blessingAttr, narrative: destiny.notes || '' });
+            if (destiny.oathPath || destiny.oathName) migrated.push({ type: 'Juramento', name: destiny.oathName || 'Juramento', attr: destiny.oathAttr || 'STR', oathPath: destiny.oathPath || 'risk', narrative: destiny.notes || '' });
+            const milestones = (Array.isArray(destiny.milestones) && destiny.milestones.length ? destiny.milestones : migrated).map(normalizeDestinyMilestone);
+            const curse = milestones.find(m => m.type === 'Maldición');
+            const blessing = milestones.find(m => m.type === 'Bendición');
+            const oath = milestones.find(m => m.type === 'Juramento');
+            return { milestones, curseAttr: curse?.attr || '', blessingAttr: blessing?.attr || '', oathPath: oath?.oathPath || '', oathAttr: oath?.attr || 'STR', oathName: oath?.name || '', notes: oath?.narrative || curse?.narrative || blessing?.narrative || '' };
         }
 
         function getDisplayName(char) {
@@ -1277,19 +1326,47 @@
         let currentWorldCharId = null;
         let currentDestinyCharId = null;
 
+        function getSharedTeamBattles(charA, charB) {
+            const rel = state.relationships[getRelKey(charA.id, charB.id)] || {};
+            return Number(rel.totalAllies ?? rel.allies ?? 0);
+        }
+
+        function eligibleCompanionOptionsHtml(char, selected = '') {
+            return state.characters.filter(candidate => candidate.id !== char.id && getSharedTeamBattles(char, candidate) >= 15)
+                .map(candidate => `<option value="${escapeAttr(candidate.id)}" ${candidate.id === selected ? 'selected' : ''}>${escapeHtml(getDisplayName(candidate))} · ${getSharedTeamBattles(char, candidate)} batallas juntos</option>`).join('');
+        }
+
+        function worldMemberOptionsHtml(char, selected = []) {
+            return state.characters.filter(candidate => candidate.id !== char.id)
+                .map(candidate => `<option value="${escapeAttr(candidate.id)}" ${selected.includes(candidate.id) ? 'selected' : ''}>${escapeHtml(getDisplayName(candidate))}</option>`).join('');
+        }
+
+        function hasCompanionLink(charAId, charBId) {
+            const a = state.characters.find(c => c.id === charAId);
+            const b = state.characters.find(c => c.id === charBId);
+            if (!a || !b) return false;
+            return normalizeWorldStatus(a.world).companions.includes(charBId) || normalizeWorldStatus(b.world).companions.includes(charAId);
+        }
+
+        function isValidClanFor(char, memberIds) {
+            const ids = [char.id, ...memberIds].filter(Boolean);
+            if (ids.length < 3) return false;
+            for (let i = 0; i < ids.length; i++) {
+                for (let j = i + 1; j < ids.length; j++) {
+                    if (!hasCompanionLink(ids[i], ids[j])) return false;
+                }
+            }
+            return true;
+        }
+
         function openWorldModal(charId) {
             const char = state.characters.find(c => c.id === charId);
             if (!char) return;
             currentWorldCharId = charId;
             char.world = normalizeWorldStatus(char.world);
             document.getElementById('world-title').innerText = `🌎 Mundo de ${getDisplayName(char)}`;
-            document.getElementById('world-title-input').value = char.world.title;
-            document.getElementById('world-companions').innerHTML = rosterOptionsHtml(char.world.companions, char.id);
-            document.getElementById('world-mission-offense').value = char.world.missionOffense;
-            document.getElementById('world-mission-protect').value = char.world.missionProtect;
-            document.getElementById('world-debt-target').value = char.world.debtTarget;
-            document.getElementById('world-debt-active').value = String(char.world.debtActive);
             setFormAddMode('world-form', canAddMilestone(char), `Los hitos se pueden designar solo al completar cada bloque de 30 combates. ${char.name} lleva ${char.battles} combates y no tiene designaciones disponibles; aquí puedes ver sus hitos de mundo ya asignados.`);
+            resetWorldForm(false);
             renderWorldSummary(char);
             document.getElementById('world-modal').classList.remove('hidden');
         }
@@ -1299,37 +1376,86 @@
             currentWorldCharId = null;
         }
 
+        function resetWorldForm(clearId = true) {
+            document.getElementById('world-form').reset();
+            if (clearId) document.getElementById('world-id').value = '';
+            window.__editingWorld = null;
+            syncWorldFormByType();
+        }
+
+        function syncWorldFormByType() {
+            const char = state.characters.find(c => c.id === currentWorldCharId);
+            const type = document.getElementById('world-type').value;
+            const item = window.__editingWorld || {};
+            const box = document.getElementById('world-dynamic');
+            if (!char || !box) return;
+            if (type === 'Compañero') box.innerHTML = `<div><label class="inventory-label">Compañero (+15 batallas juntos en el mismo equipo)</label><select id="world-companion" required class="world-input"><option value="">Selecciona...</option>${eligibleCompanionOptionsHtml(char, item.companionId)}</select><p class="text-xs text-gray-500 mt-1">Solo aparecen personajes con al menos 15 batallas compartidas como aliados.</p></div>`;
+            if (type === 'Clan') box.innerHTML = `<div><label class="inventory-label">Personajes que lo conforman</label><select id="world-members" multiple size="6" required class="world-input">${worldMemberOptionsHtml(char, item.memberIds || [])}</select><p class="text-xs text-gray-500 mt-1">Debe existir un triángulo de compañerismo: todos los miembros del clan deben ser compañeros entre sí. Un nuevo miembro también debe ser compañero de todos.</p></div>`;
+            if (type === 'Apodo') box.innerHTML = `<p class="text-xs text-yellow-200">El nombre del hito será el apodo visible del personaje.</p>`;
+            if (type === 'Misión Objetivo') box.innerHTML = `<div><label class="inventory-label">Selector</label><select id="world-mission-mode" class="world-input"><option value="destroy">Destruir</option><option value="protect">Proteger</option></select></div>${targetPickerHtml('world-target', 'Personaje o tipo de personaje selector acumulable', item.targetCharacters, item.targetTypes)}`;
+            if (type === 'Deuda') box.innerHTML = `${targetPickerHtml('world-target', 'Personaje a vencer o tipo de personaje a vencer selector acumulable', item.targetCharacters, item.targetTypes)}<input id="world-debt-active" type="hidden" value="true">`;
+            if (item.missionMode && document.getElementById('world-mission-mode')) document.getElementById('world-mission-mode').value = item.missionMode;
+        }
+
         function renderWorldSummary(char) {
             const world = normalizeWorldStatus(char.world);
-            const companions = world.companions.map(id => state.characters.find(c => c.id === id)).filter(Boolean);
-            const sameClan = getTeamClanIds([char, ...companions]);
-            document.getElementById('world-summary').innerHTML = `
-                <article class="rounded-xl border border-emerald-700/50 bg-emerald-950/20 p-4"><h4 class="font-bold text-emerald-200 mb-2">Compañeros y Clan</h4><p>Compañeros: ${companions.map(getDisplayName).map(escapeHtml).join(', ') || '—'}</p><p class="mt-2">Clan validado: ${sameClan.has(char.id) ? 'Sí, triángulo de lealtad detectado (+25)' : 'No, falta un triángulo completo'}</p></article>
-                <article class="rounded-xl border border-yellow-700/50 bg-yellow-950/20 p-4"><h4 class="font-bold text-yellow-200 mb-2">Estatus activo</h4><p>Apodo: ${escapeHtml(world.title || '—')}</p><p>Misión ofensiva: ${escapeHtml(world.missionOffense || '—')}</p><p>Misión defensiva: ${escapeHtml(world.missionProtect || '—')}</p><p>Deuda: ${world.debtActive ? `Activa contra ${escapeHtml(world.debtTarget)}` : 'Saldada o sin configurar'}</p></article>`;
+            if (!world.milestones.length) { document.getElementById('world-summary').innerHTML = '<div class="lg:col-span-2 text-gray-500 italic text-sm border border-dashed border-gray-700 rounded-xl p-6 text-center">Sin hitos de mundo activos.</div>'; return; }
+            document.getElementById('world-summary').innerHTML = world.milestones.map(item => {
+                const companion = state.characters.find(c => c.id === item.companionId);
+                const members = item.memberIds.map(id => state.characters.find(c => c.id === id)).filter(Boolean).map(getDisplayName).join(', ');
+                const targets = compactTargets(item.targetCharacters, item.targetTypes);
+                return `<article class="rounded-xl border p-4 ${getMilestoneColor(item.type === 'Apodo' ? 'Título / Apodo' : item.type)}"><p class="text-[10px] uppercase tracking-[0.18em] opacity-80">${escapeHtml(item.type)}</p><h5 class="font-bold text-lg">${escapeHtml(item.name)}</h5><p class="text-xs mt-2"><strong>Compañero:</strong> ${escapeHtml(companion ? getDisplayName(companion) : '—')} · <strong>Clan:</strong> ${escapeHtml(members || '—')} · <strong>Objetivos:</strong> ${escapeHtml(targets || '—')}</p><p class="text-xs mt-2"><strong>Modo:</strong> ${item.missionMode === 'protect' ? 'Proteger' : 'Destruir'} ${item.type === 'Deuda' ? `· ${item.debtActive ? 'Activa' : 'Saldada'}` : ''}</p>${item.narrative ? `<p class="text-xs mt-3 opacity-90 whitespace-pre-line">${escapeHtml(item.narrative)}</p>` : ''}<div class="flex gap-2 mt-4"><button onclick="editWorld('${escapeAttr(item.id)}')" class="bg-black/20 hover:bg-black/30 border border-white/10 px-3 py-1 rounded text-xs font-bold">Editar</button><button onclick="deleteWorld('${escapeAttr(item.id)}')" class="bg-red-950/70 hover:bg-red-900 border border-red-700 px-3 py-1 rounded text-xs font-bold">Eliminar</button></div></article>`;
+            }).join('');
         }
 
         document.getElementById('world-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const char = state.characters.find(c => c.id === currentWorldCharId);
             if (!char) return;
-            if (!canAddMilestone(char)) return alert('Solo puedes designar 1 hito por cada 30 combates totales del personaje.');
-            char.world = normalizeWorldStatus({
-                title: document.getElementById('world-title-input').value.trim(),
-                companions: Array.from(document.getElementById('world-companions').selectedOptions).map(o => o.value),
-                missionOffense: document.getElementById('world-mission-offense').value.trim(),
-                missionProtect: document.getElementById('world-mission-protect').value.trim(),
-                debtTarget: document.getElementById('world-debt-target').value.trim(),
-                debtActive: document.getElementById('world-debt-active').value === 'true'
+            char.world = normalizeWorldStatus(char.world);
+            const type = document.getElementById('world-type').value;
+            const item = normalizeWorldMilestone({
+                id: document.getElementById('world-id').value || generateId(), type,
+                name: document.getElementById('world-name').value.trim(), narrative: document.getElementById('world-narrative').value.trim(),
+                companionId: document.getElementById('world-companion')?.value || '', memberIds: selectedOptions('world-members'),
+                missionMode: document.getElementById('world-mission-mode')?.value || 'destroy', targetCharacters: selectedOptions('world-target-chars'), targetTypes: selectedOptions('world-target-types'), debtActive: true
             });
-            saveState();
-            openWorldModal(char.id);
+            if (!item.name || !item.narrative) return alert('Debes completar nombre y narrativa.');
+            if (type === 'Compañero' && !item.companionId) return alert('Selecciona un compañero válido con +15 batallas en el mismo equipo.');
+            if (type === 'Clan' && !isValidClanFor(char, item.memberIds)) return alert('El clan requiere un triángulo donde todos sus miembros sean compañeros entre sí.');
+            if ((type === 'Misión Objetivo' || type === 'Deuda') && !item.targetCharacters.length && !item.targetTypes.length) return alert('Selecciona al menos un personaje o tipo de personaje.');
+            const index = char.world.milestones.findIndex(ms => ms.id === item.id);
+            if (index < 0 && !canAddMilestone(char)) return alert('Solo puedes designar 1 hito por cada 30 combates totales del personaje.');
+            if (index >= 0) char.world.milestones[index] = item; else char.world.milestones.push(item);
+            char.world = normalizeWorldStatus(char.world);
+            saveState(); openWorldModal(char.id);
         });
+
+        function editWorld(itemId) {
+            const char = state.characters.find(c => c.id === currentWorldCharId);
+            const item = normalizeWorldStatus(char?.world).milestones.find(ms => ms.id === itemId);
+            if (!item) return;
+            window.__editingWorld = item;
+            document.getElementById('world-id').value = item.id;
+            document.getElementById('world-type').value = item.type;
+            document.getElementById('world-name').value = item.name;
+            document.getElementById('world-narrative').value = item.narrative;
+            syncWorldFormByType();
+        }
+
+        function deleteWorld(itemId) {
+            const char = state.characters.find(c => c.id === currentWorldCharId);
+            if (!char || !confirm('¿Eliminar este hito de mundo?')) return;
+            char.world = normalizeWorldStatus(char.world);
+            char.world.milestones = char.world.milestones.filter(ms => ms.id !== itemId);
+            char.world = normalizeWorldStatus(char.world);
+            saveState(); openWorldModal(char.id);
+        }
 
         function hydrateDestinyAttrOptions() {
             const html = ATTRS.map(a => `<option value="${a.key}">${a.name}</option>`).join('');
-            document.getElementById('destiny-curse').innerHTML = '<option value="">Sin maldición</option>' + html;
-            document.getElementById('destiny-blessing').innerHTML = '<option value="">Sin bendición</option>' + html;
-            document.getElementById('destiny-oath-attr').innerHTML = html;
+            const attr = document.getElementById('destiny-attr');
+            if (attr) attr.innerHTML = html;
         }
 
         function openDestinyModal(charId) {
@@ -1337,15 +1463,10 @@
             if (!char) return;
             currentDestinyCharId = charId;
             char.destiny = normalizeDestiny(char.destiny);
-            hydrateDestinyAttrOptions();
             document.getElementById('destiny-title').innerText = `🔮 Destino de ${getDisplayName(char)}`;
-            document.getElementById('destiny-curse').value = char.destiny.curseAttr;
-            document.getElementById('destiny-blessing').value = char.destiny.blessingAttr;
-            document.getElementById('destiny-oath-path').value = char.destiny.oathPath;
-            document.getElementById('destiny-oath-attr').value = char.destiny.oathAttr;
-            document.getElementById('destiny-oath-name').value = char.destiny.oathName;
-            document.getElementById('destiny-notes').value = char.destiny.notes;
             setFormAddMode('destiny-form', canAddMilestone(char), `Los hitos se pueden designar solo al completar cada bloque de 30 combates. ${char.name} lleva ${char.battles} combates y no tiene designaciones disponibles.`);
+            resetDestinyForm(false);
+            renderDestinyList(char);
             document.getElementById('destiny-modal').classList.remove('hidden');
         }
 
@@ -1354,23 +1475,77 @@
             currentDestinyCharId = null;
         }
 
+        function resetDestinyForm(clearId = true) {
+            document.getElementById('destiny-form').reset();
+            if (clearId) document.getElementById('destiny-id').value = '';
+            window.__editingDestiny = null;
+            syncDestinyFormByType();
+        }
+
+        function syncDestinyFormByType() {
+            const type = document.getElementById('destiny-type').value;
+            const item = window.__editingDestiny || {};
+            const casterLabel = type === 'Bendición' ? 'Quién puso la bendición' : 'Quién puso la maldición';
+            let html = '';
+            if (type === 'Maldición' || type === 'Bendición') html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">${casterLabel}</label><select id="destiny-caster" class="destiny-input"><option value="">Entidad externa / desconocida</option>${rosterOptionsHtml([item.casterId].filter(Boolean), currentDestinyCharId)}</select></div><div><label class="inventory-label">Atributo ${type === 'Maldición' ? 'maldito (0 pts)' : 'bendito (100 pts)'}</label><select id="destiny-attr" class="destiny-input"></select></div></div>`;
+            if (type === 'Juramento') html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="inventory-label">Riesgo o superación</label><select id="destiny-oath-path" class="destiny-input"><option value="risk">Riesgo (+40; tributo si pierde)</option><option value="overcome">Superación (-40; recompensa si gana)</option></select></div><div><label class="inventory-label">Tributo al que se sumará o descontará 40 pts</label><select id="destiny-attr" class="destiny-input"></select></div></div>`;
+            document.getElementById('destiny-dynamic').innerHTML = html;
+            hydrateDestinyAttrOptions();
+            if (item.attr && document.getElementById('destiny-attr')) document.getElementById('destiny-attr').value = item.attr;
+            if (item.oathPath && document.getElementById('destiny-oath-path')) document.getElementById('destiny-oath-path').value = item.oathPath;
+        }
+
         document.getElementById('destiny-form').addEventListener('submit', (e) => {
             e.preventDefault();
             const char = state.characters.find(c => c.id === currentDestinyCharId);
             if (!char) return;
-            if (!canAddMilestone(char)) return alert('Solo puedes designar 1 hito por cada 30 combates totales del personaje.');
-            char.destiny = normalizeDestiny({
-                curseAttr: document.getElementById('destiny-curse').value,
-                blessingAttr: document.getElementById('destiny-blessing').value,
-                oathPath: document.getElementById('destiny-oath-path').value,
-                oathAttr: document.getElementById('destiny-oath-attr').value,
-                oathName: document.getElementById('destiny-oath-name').value.trim(),
-                notes: document.getElementById('destiny-notes').value.trim()
+            char.destiny = normalizeDestiny(char.destiny);
+            const item = normalizeDestinyMilestone({
+                id: document.getElementById('destiny-id').value || generateId(), type: document.getElementById('destiny-type').value,
+                name: document.getElementById('destiny-name').value.trim(), narrative: document.getElementById('destiny-notes').value.trim(),
+                casterId: document.getElementById('destiny-caster')?.value || '', attr: document.getElementById('destiny-attr')?.value || 'STR', oathPath: document.getElementById('destiny-oath-path')?.value || 'risk'
             });
+            if (!item.name || !item.narrative) return alert('Debes completar nombre y narrativa.');
+            const index = char.destiny.milestones.findIndex(ms => ms.id === item.id);
+            if (index < 0 && !canAddMilestone(char)) return alert('Solo puedes designar 1 hito por cada 30 combates totales del personaje.');
+            if (index >= 0) char.destiny.milestones[index] = item; else char.destiny.milestones.push(item);
+            char.destiny = normalizeDestiny(char.destiny);
             enforceDestinyStats(char);
-            saveState();
-            openDestinyModal(char.id);
+            saveState(); openDestinyModal(char.id);
         });
+
+        function renderDestinyList(char) {
+            const destiny = normalizeDestiny(char.destiny);
+            const box = document.getElementById('destiny-list');
+            if (!destiny.milestones.length) { box.innerHTML = '<div class="text-gray-500 italic text-sm border border-dashed border-gray-700 rounded-xl p-6 text-center">Sin hitos de destino activos.</div>'; return; }
+            box.innerHTML = destiny.milestones.map(item => {
+                const caster = state.characters.find(c => c.id === item.casterId);
+                const attrName = ATTRS.find(a => a.key === item.attr)?.name || item.attr;
+                return `<article class="rounded-xl border p-4 ${getMilestoneColor(item.type === 'Bendición' ? 'Bendición / Don' : item.type === 'Juramento' ? 'Pacto / Juramento' : item.type)}"><p class="text-[10px] uppercase tracking-[0.18em] opacity-80">${escapeHtml(item.type)}</p><h5 class="font-bold text-lg">${escapeHtml(item.name)}</h5><p class="text-xs mt-2"><strong>Atributo:</strong> ${escapeHtml(attrName)} · <strong>Origen:</strong> ${escapeHtml(caster ? getDisplayName(caster) : 'Entidad externa / desconocida')} ${item.type === 'Juramento' ? `· <strong>Camino:</strong> ${item.oathPath === 'risk' ? 'Riesgo' : 'Superación'}` : ''}</p><p class="text-xs mt-3 opacity-90 whitespace-pre-line">${escapeHtml(item.narrative)}</p><div class="flex gap-2 mt-4"><button onclick="editDestiny('${escapeAttr(item.id)}')" class="bg-black/20 hover:bg-black/30 border border-white/10 px-3 py-1 rounded text-xs font-bold">Editar</button><button onclick="deleteDestiny('${escapeAttr(item.id)}')" class="bg-red-950/70 hover:bg-red-900 border border-red-700 px-3 py-1 rounded text-xs font-bold">Eliminar</button></div></article>`;
+            }).join('');
+        }
+
+        function editDestiny(itemId) {
+            const char = state.characters.find(c => c.id === currentDestinyCharId);
+            const item = normalizeDestiny(char?.destiny).milestones.find(ms => ms.id === itemId);
+            if (!item) return;
+            window.__editingDestiny = item;
+            document.getElementById('destiny-id').value = item.id;
+            document.getElementById('destiny-type').value = item.type;
+            document.getElementById('destiny-name').value = item.name;
+            document.getElementById('destiny-notes').value = item.narrative;
+            syncDestinyFormByType();
+        }
+
+        function deleteDestiny(itemId) {
+            const char = state.characters.find(c => c.id === currentDestinyCharId);
+            if (!char || !confirm('¿Eliminar este hito de destino?')) return;
+            char.destiny = normalizeDestiny(char.destiny);
+            char.destiny.milestones = char.destiny.milestones.filter(ms => ms.id !== itemId);
+            char.destiny = normalizeDestiny(char.destiny);
+            enforceDestinyStats(char);
+            saveState(); openDestinyModal(char.id);
+        }
 
         function updateBattleButton() {
             const btn = document.getElementById('btn-start-battle');
@@ -1679,12 +1854,13 @@
                 if(c1.id === c2.id) return;
                 const key = getRelKey(c1.id, c2.id);
                 if (!state.relationships[key]) {
-                    state.relationships[key] = { allies: 0, rivals: 0, hasCompanero: false, hasRival: false };
+                    state.relationships[key] = { allies: 0, totalAllies: 0, rivals: 0, hasCompanero: false, hasRival: false };
                 }
                 let rel = state.relationships[key];
 
                 if (type === 'ally') {
                     rel.allies++;
+                    rel.totalAllies = (rel.totalAllies || 0) + 1;
                     if (rel.hasRival && rel.allies === 5) {
                         // Remove Rival
                         rel.hasRival = false;
