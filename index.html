@@ -56,8 +56,38 @@
         .card-back { transform: rotateY(0deg); }
 
         /* General Character Card UI */
-        .char-card { transition: all 0.2s ease; }
-        .char-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2); border-color: #6366f1; }
+        .char-card {
+            --card-rim: #64748b;
+            --card-gold: #e2e8f0;
+            aspect-ratio: 59 / 86;
+            max-width: 23rem;
+            width: 100%;
+            margin-inline: auto;
+            padding: 0.65rem;
+            border-radius: 0.35rem;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,0.8), transparent 25%, rgba(0,0,0,0.1) 70%, rgba(255,255,255,0.5)),
+                linear-gradient(145deg, #94a3b8 0%, #cbd5e1 45%, #475569 100%);
+            border: 3px solid #1e293b;
+            box-shadow: 0 16px 30px -14px rgba(0, 0, 0, 0.9), inset 0 0 10px 2px rgba(255, 255, 255, 0.5);
+            transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+        }
+        .char-card:hover { transform: translateY(-7px) rotateX(2deg); box-shadow: 0 24px 42px -20px rgba(226, 232, 240, 0.7), 0 0 0 1px rgba(226, 232, 240, 0.6), inset 0 0 12px 3px rgba(255, 255, 255, 0.7); filter: brightness(1.15) saturate(1.1); }
+        .char-card:focus-visible { outline: 3px solid #f8fafc; outline-offset: 4px; }
+        .char-card__inner { height: 100%; display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto; gap: 0.5rem; padding: 0.55rem; border: 2px solid rgba(15, 23, 42, 0.8); background: linear-gradient(180deg, rgba(51, 65, 85, 0.85), rgba(15, 23, 42, 0.95)); box-shadow: inset 0 0 8px rgba(226, 232, 240, 0.3); }
+        .char-card__header { min-height: 2.9rem; display: flex; align-items: center; justify-content: space-between; gap: 0.45rem; padding: 0.35rem 0.45rem; border: 2px solid #334155; background: linear-gradient(180deg, #f1f5f9, #94a3b8, #64748b); color: #0f172a; box-shadow: inset 0 2px 4px rgba(255,255,255,0.7), 0 2px 5px rgba(0,0,0,0.5); border-radius: 2px; }
+        .char-card__level { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.1rem; font-size: 0.8rem; color: #a1a1aa; text-shadow: 0 1px rgba(0,0,0,0.8); }
+        .char-card__media { position: relative; min-height: 0; padding: 0.35rem; border: 3px solid #1a1a1a; background: radial-gradient(circle at 50% 20%, rgba(100, 100, 110, 0.2), transparent 32%), #000000; box-shadow: inset 0 0 20px rgba(0,0,0,0.95); }
+        .char-card__image { width: 100%; height: 100%; min-height: 13rem; object-fit: cover; object-position: top; border: 1px solid rgba(140, 140, 140, 0.3); filter: contrast(1.1) saturate(0.8); }
+        .char-card__lore { position: relative; min-height: 2.5rem; padding: 0.55rem; border: 2px solid #2d2d30; background: #18181b; color: #d4d4d8; font-family: Georgia, 'Times New Roman', serif; font-size: 0.78rem; line-height: 1.15; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5); text-align: center; }
+        .char-card__type { display: block; width: fit-content; margin: 0 auto 0.4rem auto; text-align: center; font-family: Inter, sans-serif; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #ffffff; background: linear-gradient(135deg, #ef4444 0%, #b91c1c 45%, #7f1d1d 100%); border: 1px solid #f87171; border-radius: 0.25rem; padding: 0.2rem 0.6rem; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7), inset 0 1px 3px rgba(255, 255, 255, 0.4); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.9); }        .char-card__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+        .char-card__action { min-height: 2.5rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; }
+        .char-card__meta { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+        .char-card__pill { border: 1px solid #374151; border-radius: 9999px; background: rgba(17, 24, 39, 0.72); padding: 0.25rem 0.55rem; font-size: 0.75rem; line-height: 1rem; color: #d1d5db; }
+        .char-card__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.25rem; padding: 0.35rem; border: 2px solid #ffffff; background: rgba(10, 10, 12, 0.9); }
+        .char-card__stat { border-radius: 0.15rem; background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(75, 73, 73, 0.5)); border: 1px solid rgba(140, 140, 140, 0.2); padding: 0.25rem 0.2rem; font-size: 0.68rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.05rem; }
+        .char-card__stat span { color: #e5e5e5; font-weight: 800; font-size: 0.86rem; }
+        @media (min-width: 640px) { .char-card__image { min-height: 14rem; } }
         
         .modal-overlay { background: rgba(0,0,0,0.8); backdrop-filter: blur(4px); }
         .silhouette { background: radial-gradient(circle at 50% 22%, #4b5563 0 13%, transparent 14%), radial-gradient(circle at 50% 82%, #374151 0 34%, transparent 35%), linear-gradient(135deg, #111827, #1f2937); }
@@ -95,16 +125,20 @@
                 <h1 class="text-3xl font-bold text-white">Mazo de Personajes</h1>
                 <p class="text-sm text-gray-400 mt-1">Gestiona tu colección desde las cartas; el reclutamiento permanece oculto hasta que lo necesites.</p>
             </div>
-            <button id="btn-toggle-create" onclick="toggleCreateForm()" class="bg-primary hover:bg-indigo-600 text-white font-bold py-3 px-5 rounded-lg transition shadow-lg shadow-indigo-500/30">+ Nuevo personaje</button>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="downloadCharactersJson()" class="bg-emerald-700 hover:bg-emerald-600 text-white font-bold py-3 px-5 rounded-lg transition shadow-lg shadow-emerald-500/20">Guardar Progreso (Descargar JSON)</button>
+                <button id="btn-toggle-create" onclick="toggleCreateForm()" class="bg-primary hover:bg-indigo-600 text-white font-bold py-3 px-5 rounded-lg transition shadow-lg shadow-indigo-500/30">+ Nuevo personaje</button>
+            </div>
         </div>
 
         <!-- Create Character Form -->
         <div id="create-char-panel" class="hidden bg-card rounded-xl p-6 shadow-lg border border-gray-800 mb-10">
             <div class="flex items-center justify-between gap-4 mb-4 border-b border-gray-700 pb-2">
-                <h2 class="text-xl font-bold">Reclutar Nuevo Personaje</h2>
+                <h2 id="create-char-title" class="text-xl font-bold">Reclutar Nuevo Personaje</h2>
                 <button onclick="toggleCreateForm(false)" class="text-gray-400 hover:text-white text-sm">Ocultar</button>
             </div>
             <form id="create-char-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <input type="hidden" id="char-edit-id">
                 <div class="space-y-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-1">Nombre</label>
@@ -112,12 +146,12 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-1">Tipo de personaje</label>
-                        <input type="text" id="char-type" required placeholder="Ej: dragón, humano, demonio" class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-primary">
+                        <select id="char-type" required class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-primary">
+                            <option value="">Selecciona un tipo...</option>
+                        </select>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">URL de Imagen <span class="text-xs text-gray-500">(opcional)</span></label>
-                        <input type="url" id="char-image" placeholder="https://..." class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-primary">
-                        <p class="text-xs text-gray-500 mt-1">Si no agregas imagen, se mostrará una silueta del personaje.</p>
+                    <div class="rounded-lg border border-gray-800 bg-dark/60 p-3 text-xs text-gray-400">
+                        La imagen se genera automáticamente desde el nombre. Ejemplo: <span class="text-gray-200">Fabián → personajes/fabian.jpg</span>.
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-400 mb-1">Historia</label>
@@ -144,7 +178,8 @@
                             <input type="number" id="char-mag" required min="1" max="100" value="50" class="w-full bg-dark border border-gray-700 rounded-lg p-2 text-white focus:outline-none focus:border-purple-500">
                         </div>
                     </div>
-                    <button type="submit" class="mt-6 w-full bg-primary hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg transition shadow-lg shadow-indigo-500/30">Crear Personaje</button>
+                    <button id="create-char-submit" type="submit" class="mt-6 w-full bg-primary hover:bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg transition shadow-lg shadow-indigo-500/30">Crear Personaje</button>
+                    <button id="create-char-cancel" type="button" onclick="resetCharacterForm()" class="hidden mt-3 w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">Cancelar edición</button>
                 </div>
             </form>
         </div>
@@ -152,7 +187,7 @@
         <!-- Gallery -->
         <div>
             <h2 class="text-2xl font-bold mb-6">Personajes <span id="char-count" class="text-sm font-normal text-gray-400 bg-gray-800 py-1 px-2 rounded ml-2">0</span></h2>
-            <div id="char-gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div id="char-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7">
                 <!-- Dynamically populated -->
             </div>
         </div>
@@ -209,6 +244,9 @@
                         <div class="mt-4 bg-gray-800 rounded p-3 text-center">
                             <span class="block text-xs text-gray-400 uppercase">Nivel</span>
                             <span id="modal-level" class="text-2xl font-bold text-primary"></span>
+                        </div>
+                        <div id="modal-profile-actions" class="char-card__actions mt-4" aria-label="Acciones del personaje">
+                            <!-- Injected profile action buttons -->
                         </div>
                         <div id="modal-milestone-buttons" class="mt-4 grid grid-cols-2 gap-2">
                             <!-- Injected milestone access buttons -->
@@ -368,6 +406,8 @@
         };
 
         // Constants
+        const CHARACTER_TYPES = ['Brujas','Inmortales', 'Vampiros', 'Monstruo', 'Espíritus', 'Bestias', 'Humanos', 'Magos'];
+        const LOCAL_STORAGE_KEY = 'nexusRpgState';
         const ATTRS = [
             { key: 'INT', name: 'Inteligencia', color: 'blue' },
             { key: 'STR', name: 'Fuerza', color: 'red' },
@@ -446,9 +486,118 @@
         };
 
         // Initialization
-        function init() {
-            const saved = localStorage.getItem('nexusRpgState');
-            if (saved) state = JSON.parse(saved);
+        async function init() {
+            hydrateCharacterTypeSelect();
+            state = await loadInitialState();
+            normalizeState();
+            renderGallery();
+            updateBattleButton();
+        }
+
+        function hydrateCharacterTypeSelect() {
+            const select = document.getElementById('char-type');
+            if (!select) return;
+            select.innerHTML = '<option value="">Selecciona un tipo...</option>' + CHARACTER_TYPES.map(type => `<option value="${escapeAttr(type)}">${escapeHtml(type)}</option>`).join('');
+        }
+
+        async function loadInitialState() {
+            const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (saved) {
+                try { return JSON.parse(saved); } catch (error) { console.warn('No se pudo leer el progreso local.', error); }
+            }
+            try {
+                const response = await fetch('personajes.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                return importCharactersPayload(data);
+            } catch (error) {
+                console.warn('No se pudo cargar personajes.json; se iniciará una base vacía.', error);
+                return { characters: [], rotationPool: [], relationships: {} };
+            }
+        }
+
+        function normalizeState() {
+            state.characters = Array.isArray(state.characters) ? state.characters : [];
+            state.rotationPool = Array.isArray(state.rotationPool) ? state.rotationPool : [];
+            state.relationships = state.relationships || {};
+            state.characters = state.characters.map(normalizeCharacter);
+        }
+
+        function normalizeCharacter(char = {}) {
+            const stats = char.stats || char.atributos || {};
+            const points = char.points || { pos: char.puntos_positivos, neg: char.puntos_negativos };
+            const hitos = char.hitos || {};
+            const metadata = hitos.metadata || {};
+            const normalized = {
+                id: char.id || generateId(),
+                name: char.name || char.nombre || 'Sin nombre',
+                type: char.type || char.tipo || '',
+                story: cleanHandwrittenStory(char.story || char.historia || ''),
+                image: char.image || char.imagen || buildCharacterImagePath(char.name || char.nombre || ''),
+                stats: { INT: Number(stats.INT ?? stats.inteligencia ?? 50), STR: Number(stats.STR ?? stats.fuerza ?? 50), SPD: Number(stats.SPD ?? stats.velocidad ?? 50), MAG: Number(stats.MAG ?? stats.magia ?? 50) },
+                level: Number(char.level ?? char.nivel ?? 1),
+                cap: Number(char.cap || metadata.cap || 100),
+                breakthroughPoints: char.breakthroughPoints || metadata.breakthroughPoints || { INT: 0, STR: 0, SPD: 0, MAG: 0 },
+                points: { pos: Number(points.pos ?? 0), neg: Number(points.neg ?? 0) },
+                battles: Number(char.battles || char.batallas || metadata.batallas || 0),
+                milestones: Array.isArray(char.milestones) ? char.milestones : (Array.isArray(hitos.tangibles) ? hitos.tangibles : []),
+                equipment: Array.isArray(char.equipment) ? char.equipment : (Array.isArray(hitos.equipamiento) ? hitos.equipamiento : []),
+                mental: Array.isArray(char.mental) ? char.mental : (Array.isArray(hitos.mentales) ? hitos.mentales : []),
+                world: char.world || hitos.sociales || hitos.sociedades || {},
+                destiny: char.destiny || hitos.misticos || {},
+                pendingMilestones: Number(char.pendingMilestones || metadata.pendingMilestones || 0),
+                pendingAction: char.pendingAction || null
+            };
+            normalized.milestones = (normalized.milestones || []).map(milestone => isAutomaticSocietyMilestone(milestone) ? { ...normalizeMilestone(milestone), auto: true } : normalizeMilestone(milestone));
+            if (normalized.pendingAction === 'milestone') { normalized.pendingMilestones = Math.max(normalized.pendingMilestones, 1); normalized.pendingAction = null; }
+            normalized.equipment = (normalized.equipment || []).map(normalizeEquipment);
+            normalized.mental = (normalized.mental || []).map(normalizeMentalMilestone);
+            normalized.world = normalizeWorldStatus(normalized.world);
+            normalized.destiny = normalizeDestiny(normalized.destiny);
+            enforceDestinyStats(normalized);
+            return normalized;
+        }
+
+        function importCharactersPayload(data) {
+            if (Array.isArray(data)) return { characters: data, rotationPool: [], relationships: {} };
+            return { characters: data.characters || data.personajes || [], rotationPool: data.rotationPool || [], relationships: data.relationships || {} };
+        }
+
+        function buildCharacterImagePath(name) {
+            const filename = String(name || 'personaje')
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .toLowerCase().replace(/[^a-z0-9]/g, '');
+            return `personajes/${filename || 'personaje'}.jpg`;
+        }
+
+        function toExportCharacter(char) {
+            return {
+                nombre: char.name,
+                tipo: char.type,
+                historia: char.story,
+                atributos: { inteligencia: char.stats.INT, fuerza: char.stats.STR, velocidad: char.stats.SPD, magia: char.stats.MAG },
+                puntos_positivos: char.points.pos,
+                puntos_negativos: char.points.neg,
+                nivel: char.level,
+                hitos: { tangibles: char.milestones || [], equipamiento: char.equipment || [], mentales: char.mental || [], misticos: normalizeDestiny(char.destiny), sociedades: normalizeWorldStatus(char.world), metadata: { batallas: char.battles, cap: char.cap, breakthroughPoints: char.breakthroughPoints, pendingMilestones: char.pendingMilestones } },
+                imagen: buildCharacterImagePath(char.name)
+            };
+        }
+
+        function downloadCharactersJson() {
+            const payload = state.characters.map(toExportCharacter);
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'personajes.json';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+        }
+
+        function legacyNormalizeCharacters() {
             state.characters.forEach(char => {
                 char.pendingMilestones = char.pendingMilestones || 0;
                 char.type = char.type || '';
@@ -468,13 +617,11 @@
                 enforceDestinyStats(char);
             });
             
-            // Render initial view
-            renderGallery();
-            updateBattleButton();
         }
 
         function saveState() {
-            localStorage.setItem('nexusRpgState', JSON.stringify(state));
+            state.characters.forEach(char => { char.image = buildCharacterImagePath(char.name); });
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state));
             renderGallery();
             updateBattleButton();
         }
@@ -489,6 +636,53 @@
             const shouldOpen = forceOpen === null ? panel.classList.contains('hidden') : forceOpen;
             panel.classList.toggle('hidden', !shouldOpen);
             button.innerText = shouldOpen ? 'Ocultar formulario' : '+ Nuevo personaje';
+            if (!shouldOpen) resetCharacterForm();
+        }
+
+        function resetCharacterForm() {
+            const form = document.getElementById('create-char-form');
+            form.reset();
+            document.getElementById('char-edit-id').value = '';
+            document.getElementById('create-char-title').innerText = 'Reclutar Nuevo Personaje';
+            document.getElementById('create-char-submit').innerText = 'Crear Personaje';
+            document.getElementById('create-char-cancel').classList.add('hidden');
+        }
+
+        function editCharacter(charId) {
+            const char = state.characters.find(c => c.id === charId);
+            if (!char) return;
+            toggleCreateForm(true);
+            document.getElementById('char-edit-id').value = char.id;
+            document.getElementById('char-name').value = char.name;
+            document.getElementById('char-type').value = char.type;
+            document.getElementById('char-story').value = char.story;
+            document.getElementById('char-int').value = char.stats.INT;
+            document.getElementById('char-str').value = char.stats.STR;
+            document.getElementById('char-spd').value = char.stats.SPD;
+            document.getElementById('char-mag').value = char.stats.MAG;
+            document.getElementById('create-char-title').innerText = `Editar Personaje: ${char.name}`;
+            document.getElementById('create-char-submit').innerText = 'Guardar Cambios';
+            document.getElementById('create-char-cancel').classList.remove('hidden');
+            document.getElementById('create-char-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function deleteCharacter(charId) {
+            const char = state.characters.find(c => c.id === charId);
+            if (!char || !confirm(`¿Eliminar a ${char.name}? Esta acción también limpiará sus relaciones.`)) return;
+            state.characters = state.characters.filter(c => c.id !== charId);
+            state.rotationPool = state.rotationPool.filter(id => id !== charId);
+            Object.keys(state.relationships).forEach(key => { if (key.split('_').includes(charId)) delete state.relationships[key]; });
+            state.characters.forEach(other => {
+                other.world = normalizeWorldStatus(other.world);
+                other.world.milestones = other.world.milestones.filter(ms => ms.companionId !== charId && !(ms.memberIds || []).includes(charId) && !(ms.targetCharacters || []).includes(charId));
+                other.world = normalizeWorldStatus(other.world);
+                other.destiny = normalizeDestiny(other.destiny);
+                other.destiny.milestones = other.destiny.milestones.filter(ms => ms.casterId !== charId);
+                other.destiny = normalizeDestiny(other.destiny);
+            });
+            if (currentCharId === charId) closeModal();
+            resetCharacterForm();
+            saveState();
         }
 
         function queueMilestone(char) {
@@ -728,8 +922,7 @@
 
 
         function characterTypeOptionsHtml(selected = []) {
-            const types = [...new Set(state.characters.map(c => c.type).filter(Boolean))].sort();
-            return types.map(type => `<option value="${escapeAttr(type)}" ${selected.includes(type) ? 'selected' : ''}>${escapeHtml(type)}</option>`).join('');
+            return CHARACTER_TYPES.map(type => `<option value="${escapeAttr(type)}" ${selected.includes(type) ? 'selected' : ''}>${escapeHtml(type)}</option>`).join('');
         }
 
         function selectedOptions(id) {
@@ -817,35 +1010,34 @@
 
         document.getElementById('create-char-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const newChar = {
-                id: generateId(),
-                name: document.getElementById('char-name').value,
-                type: document.getElementById('char-type').value.trim(),
-                image: document.getElementById('char-image').value.trim(),
+            const editId = document.getElementById('char-edit-id').value;
+            const characterData = {
+                name: document.getElementById('char-name').value.trim(),
+                type: document.getElementById('char-type').value,
+                image: buildCharacterImagePath(document.getElementById('char-name').value),
                 story: document.getElementById('char-story').value,
                 stats: {
                     INT: parseInt(document.getElementById('char-int').value),
                     STR: parseInt(document.getElementById('char-str').value),
                     SPD: parseInt(document.getElementById('char-spd').value),
                     MAG: parseInt(document.getElementById('char-mag').value)
-                },
-                level: 1,
-                cap: 100,
-                breakthroughPoints: { INT: 0, STR: 0, SPD: 0, MAG: 0 },
-                points: { pos: 0, neg: 0 },
-                battles: 0,
-                milestones: [],
-                equipment: [],
-                mental: [],
-                world: normalizeWorldStatus(),
-                destiny: normalizeDestiny(),
-                pendingMilestones: 0,
-                pendingAction: null // 'points'
+                }
             };
-            
-            state.characters.push(newChar);
+            if (!CHARACTER_TYPES.includes(characterData.type)) return alert('Debes elegir un tipo de personaje válido.');
+            if (editId) {
+                const char = state.characters.find(c => c.id === editId);
+                if (!char) return alert('No se encontró el personaje a editar.');
+                Object.assign(char, characterData);
+                enforceDestinyStats(char);
+            } else {
+                state.characters.push({
+                    id: generateId(), ...characterData,
+                    level: 1, cap: 100, breakthroughPoints: { INT: 0, STR: 0, SPD: 0, MAG: 0 }, points: { pos: 0, neg: 0 }, battles: 0,
+                    milestones: [], equipment: [], mental: [], world: normalizeWorldStatus(), destiny: normalizeDestiny(), pendingMilestones: 0, pendingAction: null
+                });
+            }
             saveState();
-            e.target.reset();
+            resetCharacterForm();
             toggleCreateForm(false);
         });
 
@@ -867,26 +1059,32 @@
                 if (needsMilestone) badges += `<span class="absolute top-2 left-2 bg-yellow-500 text-black text-xs font-bold px-2 py-1 rounded shadow animate-pulse">¡Hito Disponible!</span>`;
 
                 const card = document.createElement('div');
-                card.className = 'char-card bg-card border border-gray-800 rounded-xl overflow-hidden relative cursor-pointer';
+                card.className = 'char-card relative cursor-pointer';
+                card.setAttribute('tabindex', '0');
+                card.setAttribute('role', 'button');
+                card.setAttribute('aria-label', `Abrir ficha de ${getDisplayName(char)}`);
                 card.onclick = () => openCharModal(char.id);
-                const inventoryCount = (char.equipment || []).length;
-                const mentalCount = (char.mental || []).length;
+                card.onkeydown = (event) => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openCharModal(char.id); } };
                 card.innerHTML = `
-                    ${badges}
-                    ${getImageHtml(char.image, char.name, 'w-full h-48 object-cover object-top')}
-                    <div class="p-4">
-                        <div class="flex items-start justify-between gap-2">
-                            <h3 class="font-bold text-lg text-white truncate">${getDisplayName(char)}</h3>
-                            <div class="shrink-0 flex gap-1"><button title="Inventario" onclick="event.stopPropagation(); openInventoryModal('${char.id}')" class="bg-red-950/70 hover:bg-red-900 border border-red-700 rounded-lg px-2 py-1 text-sm">⚔️</button><button title="Mente" onclick="event.stopPropagation(); openMentalModal('${char.id}')" class="bg-purple-950/70 hover:bg-purple-900 border border-purple-700 rounded-lg px-2 py-1 text-sm">🧠</button><button title="Mundo" onclick="event.stopPropagation(); openWorldModal('${char.id}')" class="bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-700 rounded-lg px-2 py-1 text-sm">🌎</button><button title="Destino" onclick="event.stopPropagation(); openDestinyModal('${char.id}')" class="bg-sky-950/70 hover:bg-sky-900 border border-sky-700 rounded-lg px-2 py-1 text-sm">🔮</button></div>
+                    <div class="char-card__inner">
+                        <div class="char-card__header">
+                            <h3 class="char-card__name font-black text-base">${escapeHtml(getDisplayName(char))}</h3>
+                            <span class="char-card__level" aria-label="Nivel ${char.level}">${'★'.repeat(Math.min(5, Math.max(1, char.level || 1)))}</span>
                         </div>
-                        <p class="text-xs text-gray-400 mb-1">Tipo: ${escapeHtml(char.type || '—')}</p>
-                        <p class="text-sm text-primary mb-2">Nivel ${char.level} | ${char.battles} Batallas | ⚔️ ${inventoryCount} | 🧠 ${mentalCount}</p>
-                        ${getAvailableMilestoneSlots(char) > 0 ? '<p class="text-xs text-yellow-300 font-bold animate-pulse mb-2">Agregar un hito</p>' : ''}
-                        <div class="flex gap-2 text-xs">
-                            <span class="text-blue-400">INT: ${getDisplayedStat(char, 'INT')}</span>
-                            <span class="text-red-400">FZA: ${getDisplayedStat(char, 'STR')}</span>
-                            <span class="text-yellow-400">VEL: ${getDisplayedStat(char, 'SPD')}</span>
-                            <span class="text-purple-400">MAG: ${getDisplayedStat(char, 'MAG')}</span>
+                        <div class="char-card__media">
+                            ${badges}
+                            ${getImageHtml(char.image, char.name, 'char-card__image')}
+                        </div>
+                       <div class="char-card__lore">
+                            <div class="flex flex-wrap">
+                                ${(char.type || 'Sin tipo').split(',').map(t => `<span class="char-card__type">${escapeHtml(t.trim())}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="char-card__stats" aria-label="Atributos principales">
+                            <span class="char-card__stat text-blue-300"><strong>INT</strong><span>${getDisplayedStat(char, 'INT')}</span></span>
+                            <span class="char-card__stat text-red-300"><strong>FZA</strong><span>${getDisplayedStat(char, 'STR')}</span></span>
+                            <span class="char-card__stat text-yellow-300"><strong>VEL</strong><span>${getDisplayedStat(char, 'SPD')}</span></span>
+                            <span class="char-card__stat text-purple-300"><strong>MAG</strong><span>${getDisplayedStat(char, 'MAG')}</span></span>
                         </div>
                     </div>
                 `;
@@ -911,6 +1109,7 @@
             document.getElementById('modal-neg').innerText = `-${char.points.neg}`;
 
             renderModalStats(char);
+            renderProfileActions(char);
             renderMilestoneAccessButtons(char);
             renderSocieties(char);
             
@@ -949,6 +1148,7 @@
             document.getElementById('char-modal').classList.add('hidden');
             currentCharId = null;
         }
+
 
         function renderModalStats(char) {
             const container = document.getElementById('modal-stats');
@@ -1010,7 +1210,13 @@
                 </div>
             `).join('');
         }
-
+        function renderProfileActions(char) {
+            const container = document.getElementById('modal-profile-actions');
+            container.innerHTML = `
+                <button title="Editar" aria-label="Editar ${escapeAttr(char.name)}" onclick="editCharacter('${char.id}'); closeModal();" class="char-card__action bg-gray-800 hover:bg-gray-700 border border-gray-600 rounded-lg text-sm">✏️ <span>Editar</span></button>
+                <button title="Eliminar" aria-label="Eliminar ${escapeAttr(char.name)}" onclick="deleteCharacter('${char.id}'); closeModal();" class="char-card__action bg-red-950/70 hover:bg-red-900 border border-red-700 rounded-lg text-sm">🗑️ <span>Eliminar</span></button>
+            `;
+        }
         function toggleSocieties() {
             document.getElementById('modal-societies').classList.toggle('hidden');
         }
