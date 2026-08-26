@@ -921,7 +921,7 @@
                 <ul>
                     <li onclick="accionMenu('Agregar Reino')">Agregar Reino</li>
                     <li onclick="accionMenu('Agregar Historia')">Agregar Historia</li>
-                    <li onclick="accionMenu('Agregar Personaje')">Agregar Personaje</li>
+                    <li onclick="accionMenu('Agregar Personajes')">Agregar Personajes</li>
                 </ul>
             </div>
 
@@ -930,11 +930,24 @@
                     <li onclick="accionMenu('Editar')">Editar</li>
                     <li onclick="accionMenu('Eliminar')">Eliminar</li>
                     <li onclick="accionMenu('Agregar Historia')">Agregar Historia</li>
-                    <li onclick="accionMenu('Agregar Personaje')">Agregar Personaje</li>
+                    <li onclick="accionMenu('Agregar Personajes')">Agregar Personajes</li>
                 </ul>
+            </div>
+
+            <div id="modal-agregar-personajes-mapa" class="modal">
+                <div class="modal-contenido form-scroll">
+                    <span class="cerrar-modal" onclick="cerrarAgregarPersonajesMapa()">&times;</span>
+                    <h2 id="titulo-agregar-personajes-mapa">Agregar Personajes</h2>
+                    <p id="descripcion-agregar-personajes-mapa" style="text-align:center; color:#88c0d0; margin-top:0;"></p>
+                    <div id="lista-agregar-personajes-mapa" class="galeria-grid" style="max-height:55vh; overflow-y:auto; padding:15px;"></div>
+                    <button type="button" onclick="enviarPersonajesMapa()" style="display:block; margin:20px auto 0; padding:10px 26px;">Enviar</button>
+                </div>
             </div>
             
             <script>
+                let reinoSeleccionadoMapa = null;
+                let personajesSeleccionadosMapa = new Set();
+
                 function ingresar(reyno) {
                     document.getElementById('mapa').classList.add('bloqueado-vertical');
                     const plano = document.getElementById(reyno);
@@ -1064,9 +1077,108 @@
                 function accionMenu(accion) {
                     if (!objetivoActualMenu) return;
                     const nombreObjetivo = objetivoActualMenu.innerText;
+
+                    if (accion === 'Agregar Personajes') {
+                        abrirAgregarPersonajesMapa(nombreObjetivo);
+                        return;
+                    }
+
                     alert("Has seleccionado: " + accion + " para el reino/plano: " + nombreObjetivo);
-                    
-                    // Aquí enlazaremos la lógica en el futuro (ej. si accion === 'Agregar Personaje' -> abrir modal)
+                }
+
+                function normalizarObjetivoMapa(nombreObjetivo) {
+                    const objetivo = nombreObjetivo.trim();
+                    const equivalencias = {
+                        'CIELOS': 'LOS CIELOS',
+                        'PLANO MORTAL': 'Reino',
+                        'INFIERNOS': 'Zaradon'
+                    };
+
+                    return equivalencias[objetivo] || objetivo;
+                }
+
+                function abrirAgregarPersonajesMapa(nombreObjetivo) {
+                    reinoSeleccionadoMapa = normalizarObjetivoMapa(nombreObjetivo);
+                    personajesSeleccionadosMapa = new Set();
+
+                    document.getElementById('titulo-agregar-personajes-mapa').innerText = 'Agregar Personajes a ' + reinoSeleccionadoMapa;
+                    document.getElementById('descripcion-agregar-personajes-mapa').innerText = 'Selecciona uno o más personajes y presiona Enviar para descargar personajes.json actualizado.';
+
+                    const lista = document.getElementById('lista-agregar-personajes-mapa');
+                    lista.innerHTML = '';
+
+                    if (!personajes || personajes.length === 0) {
+                        lista.innerHTML = '<p style="color:#ff8888; text-align:center; grid-column:1/-1;">No hay personajes cargados.</p>';
+                    } else {
+                        personajes.forEach(personaje => {
+                            const item = document.createElement('label');
+                            item.className = 'tarjeta-personaje tarjeta-mini';
+                            item.style.cursor = 'pointer';
+                            item.style.position = 'relative';
+                            item.innerHTML = `
+                                <input type="checkbox" value="${personaje.id}" style="position:absolute; top:10px; left:10px; transform:scale(1.4);">
+                                <h3 class="titulo-carta">${personaje.nombre}</h3>
+                                <img src="${personaje.imagen}" class="imagen-personaje">
+                                <p class="historia-personaje" style="margin:8px 0; text-align:center; color:#88c0d0;">${personaje.reino || 'Sin reino'}</p>
+                            `;
+
+                            const checkbox = item.querySelector('input');
+                            checkbox.addEventListener('change', () => {
+                                if (checkbox.checked) {
+                                    personajesSeleccionadosMapa.add(personaje.id);
+                                    item.classList.add('activo');
+                                } else {
+                                    personajesSeleccionadosMapa.delete(personaje.id);
+                                    item.classList.remove('activo');
+                                }
+                            });
+
+                            lista.appendChild(item);
+                        });
+                    }
+
+                    document.getElementById('modal-agregar-personajes-mapa').style.display = 'block';
+                }
+
+                function cerrarAgregarPersonajesMapa() {
+                    document.getElementById('modal-agregar-personajes-mapa').style.display = 'none';
+                }
+
+                function descargarPersonajesActualizados() {
+                    const blob = new Blob([JSON.stringify(personajes, null, 4)], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "personajes.json";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+
+                function enviarPersonajesMapa() {
+                    if (!reinoSeleccionadoMapa) return;
+                    if (personajesSeleccionadosMapa.size === 0) {
+                        alert('Selecciona al menos un personaje.');
+                        return;
+                    }
+
+                    personajes = personajes.map(personaje => {
+                        if (personajesSeleccionadosMapa.has(personaje.id)) {
+                            return { ...personaje, reino: reinoSeleccionadoMapa };
+                        }
+
+                        return personaje;
+                    });
+
+                    descargarPersonajesActualizados();
+                    cerrarAgregarPersonajesMapa();
+                    mostrarPersonajes(personajes);
+
+                    if (typeof entrarReino === 'function') {
+                        const tipoPlano = objetivoActualMenu ? objetivoActualMenu.closest('.plano')?.id : null;
+                        if (tipoPlano) entrarReino(reinoSeleccionadoMapa, tipoPlano);
+                    }
                 }
                 let isScrolling = false;
                 const duracionScroll = 1200; 
