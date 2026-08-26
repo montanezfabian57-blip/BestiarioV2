@@ -37,6 +37,28 @@ function cambiarSubpestana(subpestana) {
         subPersonajes.classList.remove("activo");
     }
 }
+
+function cerrarModalDesdeBoton(botonCerrar) {
+    const modalCercano = botonCerrar.closest(".modal");
+    if (modalCercano) {
+        modalCercano.style.display = "none";
+    }
+}
+
+document.addEventListener("click", (event) => {
+    const botonCerrar = event.target.closest(".cerrar-modal, .cerrar-modal-mazo");
+    if (botonCerrar) {
+        event.preventDefault();
+        event.stopPropagation();
+        cerrarModalDesdeBoton(botonCerrar);
+        return;
+    }
+
+    if (event.target.classList.contains("modal")) {
+        event.target.style.display = "none";
+    }
+}, true);
+
 let personajes = [];
 let tarjetasGuardadas = [];
 let historiasGuardadas = [];
@@ -492,7 +514,7 @@ function mostrarPersonajes(lista) {
     contenedorSub.appendChild(contenedorGrid);
 }
 const modal = document.getElementById("modal-personaje");
-const btnCerrar = document.querySelector(".cerrar-modal");
+const btnCerrar = modal?.querySelector(".cerrar-modal");
 function obtenerColorAtributo(atributo) {
     const colores = {
         velocidad: "#2dd4bf",
@@ -600,14 +622,16 @@ function abrirModal(personaje) {
     `;
     modal.style.display = "block";
 }
-btnCerrar.onclick = () => {
-    modal.style.display = "none";
+if (btnCerrar) {
+    btnCerrar.onclick = () => {
+        modal.style.display = "none";
+    };
 }
-window.onclick = (event) => {
+window.addEventListener("click", (event) => {
     if (event.target == modal) {
         modal.style.display = "none";
     }
-}
+});
 cargarPersonajes();
 let mazosGuardados = [];
 let mazoActual = [];
@@ -2582,6 +2606,13 @@ function cerrarModalHistoriaDetalle() {
     const modal = document.getElementById("modal-detalle-historia");
     if (modal) {
         modal.style.display = "none";
+    }
+}
+
+function cerrarEditorHistoria() {
+    const modalEditor = document.getElementById("modal-editor-historia");
+    if (modalEditor) {
+        modalEditor.style.display = "none";
     }
 }
 
