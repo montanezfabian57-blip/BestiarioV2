@@ -90,7 +90,7 @@
             "magia": 84,
             "defensa": 40
         },
-        "imagen": "personajes/zhautung.jpg",
+        "imagen": "personajes/zhaitung.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -144,7 +144,7 @@
             "magia": 10,
             "defensa": 50
         },
-        "imagen": "personajes/rawnar.jpg"
+        "imagen": "personajes/Rawnar.jpg"
     },
     {
         "id": "eilasmaera",
@@ -192,7 +192,7 @@
             "magia": 78,
             "defensa": 89
         },
-        "imagen": "personajes/laarmaduradelreymorvath.jpg",
+        "imagen": "personajes/armadura.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -228,7 +228,7 @@
             "magia": 89,
             "defensa": 40
         },
-        "imagen": "personajes/reinavaleria.jpg",
+        "imagen": "personajes/valeria.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -264,7 +264,7 @@
             "magia": 87,
             "defensa": 12
         },
-        "imagen": "personajes/reinahali.jpg",
+        "imagen": "personajes/hali.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -318,7 +318,7 @@
             "magia": 60,
             "defensa": 80
         },
-        "imagen": "personajes/reyzorak.jpg",
+        "imagen": "personajes/zorak.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -336,7 +336,7 @@
             "magia": 62,
             "defensa": 82
         },
-        "imagen": "personajes/reyrhyon.jpg",
+        "imagen": "personajes/rhyon.jpg",
         "puntosPositivos": 2,
         "puntosNegativos": 3,
         "duelos": 4
@@ -354,7 +354,7 @@
             "magia": 40,
             "defensa": 87
         },
-        "imagen": "personajes/reinaxaira.jpg",
+        "imagen": "personajes/xaira.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -390,7 +390,7 @@
             "magia": 85,
             "defensa": 20
         },
-        "imagen": "personajes/skjar.jpg",
+        "imagen": "personajes/kjar.jpg",
         "puntosPositivos": 0,
         "puntosNegativos": 0,
         "duelos": 0
@@ -444,7 +444,7 @@
             "magia": 7,
             "defensa": 88
         },
-        "imagen": "personajes/mantisdehueso.jpg",
+        "imagen": "personajes/mantis.jpg",
         "puntosPositivos": 1,
         "puntosNegativos": 4,
         "duelos": 2
@@ -1064,4 +1064,5 @@
         },
         "imagen": "personajes/maret.jpg"
     }
+
 ]
